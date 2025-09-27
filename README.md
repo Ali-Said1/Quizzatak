@@ -126,7 +126,45 @@ Whether used for **learning, competition, or entertainment**, Quizzatak adapts t
 * Deploy app to cloud (Render/Heroku for backend, Vercel/Netlify for frontend)
 * Final testing and documentation
 ---
+<a id="roles"></a>
 
+## 🧑‍💻 Roles & Responsibilities
+
+### 1. Ali Said Mohammed
+**Responsibilities:**
+- Build host/player screens and dashboard UI.  
+- Lead Socket.IO integration for real-time gameplay (score updates, timers, leaderboards).  
+- Assist Marawan & Emad with backend API integration.  
+- Oversee live leaderboard logic and event testing.  
+
+### 2. Emad Adham Mandouh
+**Responsibilities:**
+- Assist Ali and Marawan with Socket.IO and real-time logic.  
+- Implement backend server logic (Node.js/Express) for scores, sessions, and timers.  
+- Connect MongoDB models to API endpoints.  
+- Test frontend-backend communication and help debug issues.  
+
+### 3. Mahmoud Tarek Eid
+**Responsibilities:**
+- Build MongoDB schemas (quizzes, questions, scores).  
+- Implement simple REST endpoints with Marawan & Emad.  
+- Assist with data validation, and storing game results.  
+
+### 4. Marawan Abdulrahim Sayed
+**Responsibilities:**
+- Build quiz builder and player screens.  
+- Lead backend API endpoints (quiz creation, join, submit answer).  
+- Integrate frontend with backend, including REST endpoints and Socket.IO events.  
+- Help implement JWT authentication and role-based access.  
+
+### 5. Mohammed Atef Abdelwahab
+**Responsibilities:**
+- Assist Ali & Emad with Socket.IO events.  
+- Support game session and timer logic.  
+- Help with deployment tasks and server setup.  
+- Test real-time synchronization across devices.  
+
+---
 <a id="demo"></a>
 
 ## 🎥 Demo
