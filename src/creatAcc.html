@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="node_modules/tailwindcss/tailwind.css" />
+  </head>
+  <link rel="stylesheet" href="style.css" />
+  <body>
+    <div
+      class="w-50 d-flex flex-column gap-2 px-5 shadow p-3 mb-5 rounded main"
+    >
+      <h3 class="text-light text-center">Create Your Account</h3>
+      <form action="" class="d-flex flex-column gap-1">
+        <div class="d-flex flex-column gap-1">
+          <label for="userName" class="grayText labelName">Name</label>
+          <input
+            type="text"
+            name="userName"
+            id="userName"
+            class="rounded-1 border-0 py-1 px-2 bgInp text-light fw-medium"
+          />
+        </div>
+        <div class="d-flex flex-column gap-1">
+          <label for="email" class="grayText labelEmail">Email</label>
+          <input
+            type="text"
+            name="email"
+            id="email"
+            class="rounded-1 border-0 py-1 px-2 bgInp text-light fw-medium"
+          />
+        </div>
+        <div class="d-flex flex-column gap-1">
+          <label for="password" class="grayText labelPass">Password</label>
+          <input
+            type="text"
+            name="password"
+            id="password"
+            class="rounded-1 border-0 py-1 px-2 bgInp text-light fw-medium"
+          />
+        </div>
+        <div class="d-flex flex-column gap-1">
+          <label class="grayText labelRole">Role</label>
+          <div class="d-flex gap-4">
+            <div class="d-flex gap-1">
+              <input
+                type="radio"
+                name="role"
+                id="studentRole"
+                class="rounded-1 border-0 py-1 roles"
+              />
+              <label for="studentRole" class="grayText">Student</label>
+            </div>
+            <div class="d-flex gap-1">
+              <input
+                type="radio"
+                name="role"
+                id="TeacherRole"
+                class="rounded-1 border-0 py-1 roles"
+              />
+              <label for="studentRole" class="grayText">Teacher</label>v
+            </div>
+          </div>
+        </div>
+        <button
+          class="bg-primary border-0 py-2 px-3 rounded-2 text-light text-center w-100 fw-medium"
+        >
+          Create Account
+        </button>
+        <p class="grayText text-center">
+          Already have an account ? <a class="text-primary">Sign in</a>
+        </p>
+      </form>
+    </div>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="test.js"></script>
+  </body>
+</html>
