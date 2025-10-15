@@ -1,0 +1,36 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a {
+  text-decoration: none !important;
+}
+body {
+  background-color: rgb(15, 23, 39) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+.main {
+  background-color: rgb(30, 41, 57) !important;
+}
+.grayText {
+  color: rgb(183, 183, 183);
+}
+.bgInp {
+  background-color: rgb(15, 23, 39) !important;
+}
+@media screen and (max-width: 767px) {
+  .main {
+    width: 75% !important;
+  }
+}
+@media screen and (max-width: 350px) {
+  .main {
+    width: 90% !important;
+    padding: 0.6em !important;
+  }
+}
