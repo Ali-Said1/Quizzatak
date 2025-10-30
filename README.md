@@ -1,70 +1,182 @@
-# Getting Started with Create React App
+# Quizzatak
+> **Quiz. Compete. Dominate.** - A fast-paced, real-time quiz battle platform built with MERN.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+  <a href="#key-features">Features</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#security">Security</a> •
+  <a href="#team">Team</a> •
+  <a href="#roadmap">Roadmap</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#license">License</a>
+</p>
 
-## Available Scripts
+<p align="center">
+  <img alt="MERN" src="https://img.shields.io/badge/Stack-MERN-1f6feb"/>
+</p>
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📖 Overview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Quizzatak** is a **Kahoot-style real-time quiz game** where players can **join rooms, answer questions, and race against the clock** to climb the leaderboard.  
+It’s designed for **classrooms, communities, and friends**, combining **fun, speed, and knowledge** in one place.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Whether used for **learning, competition, or entertainment**, Quizzatak adapts to different settings with features like **live leaderboards, randomization, and real-time updates** powered by WebSockets.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<a id="key-features"></a>
 
-### `npm run build`
+## 🚀 Key Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🎮 Gameplay
+* Create and host quizzes with **multiple choice questions**.
+* Players join via **game PIN**.
+* **Live leaderboard** updates after each question.
+* Time-based scoring (faster = more points).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 👥 Multiplayer
+* Host can share a **room code** for others to join.
+* Real-time sync using **Socket.IO**.
+* Works across multiple devices.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 🛠 Quiz Builder
+* Create questions with options, correct answers, and timers.
+* Randomization of questions and options to prevent cheating.
 
-### `npm run eject`
+### 🏆 Gamification
+* Score system based on speed + correctness.
+* **Achievements & badges** planned.
+* Leaderboards (room, global, friends).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 🔔 Notifications
+* In-game alerts (next round starting, times up, etc.).
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 🌍 Accessibility
+* Mobile-responsive design.
+* Multi-language ready (English + Arabic planned).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+<a id="tech-stack"></a>
 
-## Learn More
+## 🧱 Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* **Frontend:** React, TypeScript, Tailwind CSS, Redux
+* **Backend:** Node.js, Express.js
+* **Database:** MongoDB + Mongoose
+* **Real-time:** Socket.IO
+* **Auth:** JWT (access/refresh) + bcrypt for hashing
+* **Deployment:** TBD
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+<a id="security"></a>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🔐 Security & Privacy
 
-### Analyzing the Bundle Size
+* **Authentication:** JWT access & refresh tokens
+* **Authorization:** role-based (admin, host, player)
+* **Sensitive Data:** passwords hashed with bcrypt
+* **Anti-Cheat Basics:** question randomization & time limits
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<a id="team"></a>
 
-### Making a Progressive Web App
+## 👥 Team
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* Ali Said Mohammed  
+* Emad Adham Mandouh  
+* Mahmoud Tarek Eid  
+* Marawan Abdulrahim Sayed  
+* Mohammed Atef Abdelwahab  
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<a id="roadmap"></a>
 
-### Deployment
+## 🗺️ Roadmap
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- [x] Phase 0 - Setup (Week 1)
+* Initialize GitHub repo & base React project
+* Configure TailwindCSS, ESLint, and Prettier
+* Create host/player UI
 
-### `npm run build` fails to minify
+✅ [Figma Design](https://www.figma.com/design/5hQglns2vgszbaDVSPPXDe/Quizzatak?node-id=4-2&t=WjYQV1LD4OxUXbKQ-1)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [ ] Phase 1 - UI & Gameplay Flow (Weeks 2–3)
+* Build quiz creation form (frontend only)
+* Design host dashboard and player join screen
+* Build quiz question/answer screens
+* Add timer countdown and basic scoring logic (frontend simulation)
+
+- [ ] Phase 2 - Real-Time Simulation (Weeks 4–5)
+* Mock real-time updates with local state
+* Build leaderboard component (frontend-only demo)
+* Add animations and accessibility improvements
+* Prepare for integration with backend
+
+- [ ] Phase 3 - Backend & Database (Weeks 6–7)
+* Set up Express.js server
+* Implement MongoDB models for quizzes, users, scores
+* Add JWT authentication and role-based access
+* Integrate with frontend UI
+
+- [ ] Phase 4 - Final Polish & Deployment (Week 8)
+* Implement real-time play with Socket.IO
+* Optimize UI for mobile and Arabic (RTL support)
+* Deploy app to cloud (Render/Heroku for backend, Vercel/Netlify for frontend)
+* Final testing and documentation
+---
+<a id="roles"></a>
+
+## 🧑‍💻 Roles & Responsibilities
+
+### 1. Ali Said Mohammed
+**Responsibilities:**
+- Build host/player screens and dashboard UI.  
+- Lead Socket.IO integration for real-time gameplay (score updates, timers, leaderboards).  
+- Assist Marawan & Emad with backend API integration.  
+- Oversee live leaderboard logic and event testing.  
+
+### 2. Emad Adham Mandouh
+**Responsibilities:**
+- Assist Ali and Marawan with Socket.IO and real-time logic.  
+- Implement backend server logic (Node.js/Express) for scores, sessions, and timers.  
+- Connect MongoDB models to API endpoints.  
+- Test frontend-backend communication and help debug issues.  
+
+### 3. Mahmoud Tarek Eid
+**Responsibilities:**
+- Build MongoDB schemas (quizzes, questions, scores).  
+- Implement simple REST endpoints with Marawan & Emad.  
+- Assist with data validation, and storing game results.  
+
+### 4. Marawan Abdulrahim Sayed
+**Responsibilities:**
+- Build quiz builder and player screens.  
+- Lead backend API endpoints (quiz creation, join, submit answer).  
+- Integrate frontend with backend, including REST endpoints and Socket.IO events.  
+- Help implement JWT authentication and role-based access.  
+
+### 5. Mohammed Atef Abdelwahab
+**Responsibilities:**
+- Assist Ali & Emad with Socket.IO events.  
+- Support game session and timer logic.  
+- Help with deployment tasks and server setup.  
+- Test real-time synchronization across devices.  
+
+---
+<a id="demo"></a>
+
+## 🎥 Demo
+A live demo will be available soon. Stay tuned! 🚀  
+
+---
+
+<a id="license"></a>
+
+## 📄 License
+
+This project is licensed under the **MIT License**.  
+See [LICENSE](LICENSE) for details.
