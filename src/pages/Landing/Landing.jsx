@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import Header from '../components/Header';
-import Hero from '../components/Hero';
-import FeatureCard from '../components/FeatureCard';
+import Header from '../../components/Header';
+import Hero from '../../components/Hero';
+import FeatureCard from '../../components/FeatureCard';
 
 const Landing = ({ theme, toggleTheme }) => {
   const features = [
