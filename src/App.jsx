@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import Landing from './pages/Landing';
+import TeacherDashboard from './pages/teacherDashboard/teacherDashboard.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css';
 
 export default function App() {
@@ -10,5 +11,5 @@ export default function App() {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
-  return <Landing theme={theme} toggleTheme={toggleTheme} />;
+  return <TeacherDashboard theme={theme} toggleTheme={toggleTheme} />;
 }
