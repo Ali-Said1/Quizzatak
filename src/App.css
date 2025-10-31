@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-wrapper {
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  padding-bottom: 3rem;
+}
+
+.main-wrapper.dark {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.main-wrapper.light {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.dark .text-muted {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.light .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark .feature-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: transform 0.2s;
+}
+
+.light .feature-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: transform 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-text {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark .btn-secondary {
+  background-color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.dark .btn-secondary:hover {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.light .btn-secondary {
+  background-color: #ec4899;
+  border-color: #ec4899;
+}
+
+.light .btn-secondary:hover {
+  background-color: #db2777;
+  border-color: #db2777;
+}
+
+.dark .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  color: white;
+}
+
+.light .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: white;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .display-3 {
+    font-size: 2.5rem;
+  }
+}
