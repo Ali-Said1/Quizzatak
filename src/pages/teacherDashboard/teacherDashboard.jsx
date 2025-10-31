@@ -20,15 +20,16 @@ const TeacherDashboard = ({ theme, toggleTheme }) => {
         <Card className="dashboard-card mb-4">
           <Card.Body className="p-4">
             <Form>
-              <Form.Label htmlFor="classroom-name" className="fw-medium">
+              <Form.Label htmlFor="classroom-name" className="fw-medium text-light mb-2">
                 New classroom name
               </Form.Label>
               <InputGroup>
                 <Form.Control
                   id="classroom-name"
+                  className="dark-input"
                   placeholder="e.g., Grade 10 Physics"
                 />
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" className="btn-create">
                   Create
                 </Button>
               </InputGroup>
@@ -39,10 +40,10 @@ const TeacherDashboard = ({ theme, toggleTheme }) => {
         {/* Section 2: Manage Classrooms */}
         <Card className="dashboard-card mb-4">
           <Card.Body className="p-4">
-            <h5 className="mb-3 fw-bold">Manage Classrooms</h5>
-            <Form.Group controlId="select-classroom" className="mb-3">
-              <Form.Label>Select classroom</Form.Label>
-              <Form.Select>
+            <h5 className="mb-4 fw-bold text-light">Manage Classrooms</h5>
+            <Form.Group controlId="select-classroom" className="mb-4">
+              <Form.Label className="text-light mb-2">Select classroom</Form.Label>
+              <Form.Select className="dark-select">
                 <option>Select a classroom...</option>
                 {/* Classrooms would be mapped here */}
               </Form.Select>
@@ -51,15 +52,16 @@ const TeacherDashboard = ({ theme, toggleTheme }) => {
             <Row className="g-3">
               {/* Add Student */}
               <Col md={6}>
-                <Form.Label htmlFor="add-student-email">
+                <Form.Label htmlFor="add-student-email" className="text-light mb-2">
                   Add student by email
                 </Form.Label>
                 <InputGroup>
                   <Form.Control
                     id="add-student-email"
+                    className="dark-input"
                     placeholder="student@email.com"
                   />
-                  <Button variant="secondary" id="add-student-btn">
+                  <Button variant="primary" id="add-student-btn" className="btn-add">
                     Add
                   </Button>
                 </InputGroup>
@@ -67,15 +69,15 @@ const TeacherDashboard = ({ theme, toggleTheme }) => {
 
               {/* Assign Quiz */}
               <Col md={6}>
-                <Form.Label htmlFor="assign-quiz-select">
+                <Form.Label htmlFor="assign-quiz-select" className="text-light mb-2">
                   Assign quiz
                 </Form.Label>
                 <InputGroup>
-                  <Form.Select id="assign-quiz-select">
+                  <Form.Select id="assign-quiz-select" className="dark-select">
                     <option>Select a quiz...</option>
                     {/* Quizzes would be mapped here */}
                   </Form.Select>
-                  <Button variant="success">Assign</Button>
+                  <Button variant="success" className="btn-assign">Assign</Button>
                 </InputGroup>
               </Col>
             </Row>
@@ -85,8 +87,8 @@ const TeacherDashboard = ({ theme, toggleTheme }) => {
         {/* Section 3: Your Classrooms */}
         <Card className="dashboard-card">
           <Card.Body className="p-4">
-            <h5 className="mb-3 fw-bold">Your Classrooms</h5>
-            <p className="text-muted mb-0">
+            <h5 className="mb-3 fw-bold text-light">Your Classrooms</h5>
+            <p className="text-muted-custom mb-0">
               No classrooms yet. Create one above.
             </p>
           </Card.Body>

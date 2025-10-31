@@ -24,6 +24,10 @@ export default function App() {
           path="/host" 
           element={<HostQuiz theme={theme} toggleTheme={toggleTheme} />} 
         />
+        <Route
+        path="/dashboard"
+        element={<TeacherDashboard theme={theme} toggleTheme={toggleTheme} />}
+      />
       </Routes>
     </Router>
   );
