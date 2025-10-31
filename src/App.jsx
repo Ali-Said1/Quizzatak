@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing/Landing';
 import HostQuiz from './pages/HostQuiz/HostQuiz';
+import Login from './pages/Auth/Login';
+import Signup from './pages/Auth/Signup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -21,6 +23,14 @@ export default function App() {
         <Route 
           path="/host" 
           element={<HostQuiz theme={theme} toggleTheme={toggleTheme} />} 
+        />
+        <Route 
+          path="/login" 
+          element={<Login theme={theme} toggleTheme={toggleTheme} />} 
+        />
+        <Route 
+          path="/signup" 
+          element={<Signup theme={theme} toggleTheme={toggleTheme} />} 
         />
       </Routes>
     </Router>
