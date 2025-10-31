@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import TeacherDashboard from './pages/teacherDashboard/teacherDashboard.jsx';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing/Landing';
 import HostQuiz from './pages/HostQuiz/HostQuiz';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import './App.css';
 
 export default function App() {
@@ -32,6 +34,10 @@ export default function App() {
           path="/signup" 
           element={<Signup theme={theme} toggleTheme={toggleTheme} />} 
         />
+        <Route
+        path="/dashboard"
+        element={<TeacherDashboard theme={theme} toggleTheme={toggleTheme} />}
+      />
       </Routes>
     </Router>
   );
