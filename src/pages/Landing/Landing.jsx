@@ -1,10 +1,13 @@
-import React from 'react';
+import {useContext} from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../../components/Header';
 import Hero from '../../components/Hero';
 import FeatureCard from '../../components/FeatureCard';
+import { ThemeContext } from "../../contexts/ThemeContext";
 
-const Landing = ({ theme, toggleTheme }) => {
+
+const Landing = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext)
   const features = [
     {
       title: 'Live Leaderboards',

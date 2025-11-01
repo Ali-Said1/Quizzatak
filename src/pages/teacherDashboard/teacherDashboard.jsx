@@ -1,4 +1,4 @@
-import React from "react";
+import {useContext} from 'react';
 import {
   Container,
   Row,
@@ -8,10 +8,12 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 import DashboardHeader from "../../components/DashboardHeader.jsx";
 
-const TeacherDashboard = ({ theme, toggleTheme }) => {
+const TeacherDashboard = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext)
   return (
     <div className={`main-wrapper ${theme}`}>
       <DashboardHeader theme={theme} toggleTheme={toggleTheme} />

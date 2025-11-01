@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   Container, 
   Row, 
@@ -10,8 +10,10 @@ import {
 } from 'react-bootstrap';
 import QuizHeader from '../../components/QuizHeader';
 import './HostQuiz.css'
+import { ThemeContext } from "../../contexts/ThemeContext";
 
-const HostQuiz = ({ theme, toggleTheme }) => {
+
+const HostQuiz = () => {
   // State for the form fields
   const [title, setTitle] = useState('');
   const [question, setQuestion] = useState('');
@@ -21,7 +23,8 @@ const HostQuiz = ({ theme, toggleTheme }) => {
   const [option4, setOption4] = useState('');
   const [correctOption, setCorrectOption] = useState(1); // Default to option 1
   const [timer, setTimer] = useState(20);
-
+  const {theme, toggleTheme} = useContext(ThemeContext)
+  
   // Simple state for preview
   const [questions, setQuestions] = useState([]);
 

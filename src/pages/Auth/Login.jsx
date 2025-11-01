@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AuthHeader from '../../components/AuthHeader';
 import './Auth.css'; // Reusing the same centering CSS
+import { ThemeContext } from "../../contexts/ThemeContext";
 
-const Login = ({ theme, toggleTheme }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const {theme, toggleTheme} = useContext(ThemeContext)
+  
   return (
     <div className={`main-wrapper ${theme}`}>
       <AuthHeader theme={theme} toggleTheme={toggleTheme} />

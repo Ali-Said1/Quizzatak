@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import AuthHeader from '../../components/AuthHeader';
 import './Auth.css';
+import { ThemeContext } from "../../contexts/ThemeContext";
 
-const Signup = ({ theme, toggleTheme }) => {
+const Signup = () => {
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('student'); // 'student' or 'teacher'
-
+  const {theme, toggleTheme} = useContext(ThemeContext);
+  
   return (
     <div className={`main-wrapper ${theme}`}>
       <AuthHeader theme={theme} toggleTheme={toggleTheme} />
