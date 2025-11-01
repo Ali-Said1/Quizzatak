@@ -209,3 +209,33 @@
     margin-bottom: 1rem !important;
   }
 }
+
+/* QuestionCard Choices */
+.dark .question-choice {
+  background: rgba(30, 41, 59, 0.6);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.light .question-choice {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Correct choice highlight */
+.question-choice.correct {
+  background: rgba(16, 185, 129, 0.8) !important;
+}

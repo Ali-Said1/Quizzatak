@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Container, Button, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-const QuizHeader = ({ theme, toggleTheme }) => {
+import { ThemeContext } from '../contexts/ThemeContext';
+const QuizHeader = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext)
   return (
     <header className="py-3">
       <Container>

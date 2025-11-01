@@ -11,6 +11,7 @@ import {
 import QuizHeader from '../../components/QuizHeader';
 import './HostQuiz.css'
 import { ThemeContext } from "../../contexts/ThemeContext";
+import QuestionsPreview from '../../components/QuestionsPreview';
 
 
 const HostQuiz = () => {
@@ -23,11 +24,10 @@ const HostQuiz = () => {
   const [option4, setOption4] = useState('');
   const [correctOption, setCorrectOption] = useState(1); // Default to option 1
   const [timer, setTimer] = useState(20);
-  const {theme, toggleTheme} = useContext(ThemeContext)
+  const {theme} = useContext(ThemeContext)
   
   // Simple state for preview
   const [questions, setQuestions] = useState([]);
-
   const handleAddQuestion = () => {
     // Basic validation
     if (!question || !option1 || !option2 || !option3 || !option4) {
@@ -42,7 +42,7 @@ const HostQuiz = () => {
       correct: correctOption,
       timer: timer
     };
-    setQuestions([...questions, newQuestion]);
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
 
     // Clear form fields after adding
     setQuestion('');
@@ -57,7 +57,7 @@ const HostQuiz = () => {
   return (
     // This wrapper applies your theme from App.css
     <div className={`main-wrapper ${theme}`}>
-      <QuizHeader theme={theme} toggleTheme={toggleTheme} />
+      <QuizHeader/>
       <Container className="mt-4">
         <Row className="g-4">
           
@@ -168,30 +168,7 @@ const HostQuiz = () => {
           </Col>
 
           {/* Right Column: Preview */}
-          <Col md={5}>
-            <Card className="quiz-card p-4">
-              <Card.Body>
-                <h5 className="mb-3">Preview</h5>
-                {questions.length === 0 ? (
-                  <p className="text-muted small">
-                    Add at least one question to create your quiz.
-                  </p>
-                ) : (
-                  <p className="text-muted small">
-                    {`You have added ${questions.length} question(s).`}
-                  </p>
-                )}
-                
-                <Button 
-                  variant="success" 
-                  className="w-100 mt-4" 
-                  disabled={questions.length === 0}
-                >
-                  Generate Game PIN & Go to Lobby
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
+          <QuestionsPreview questions={questions} />
         </Row>
       </Container>
     </div>

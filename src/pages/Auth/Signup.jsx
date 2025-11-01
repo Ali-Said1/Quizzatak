@@ -15,7 +15,7 @@ const Signup = () => {
   
   return (
     <div className={`main-wrapper ${theme}`}>
-      <AuthHeader theme={theme} toggleTheme={toggleTheme} />
+      <AuthHeader/>
       
       {/* This new 'auth-container' class will center the card */}
       <Container className="auth-container">

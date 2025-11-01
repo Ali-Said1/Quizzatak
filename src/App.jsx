@@ -5,40 +5,41 @@ import Landing from './pages/Landing/Landing';
 import HostQuiz from './pages/HostQuiz/HostQuiz';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
+import JoinGame from './pages/JoinGame/JoinGame.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 
 export default function App() {
-  const [theme, setTheme] = useState('dark');
 
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
   return (
     <ThemeProvider>
       <Router>
         <Routes>
           <Route 
             path="/" 
-            element={<Landing theme={theme} toggleTheme={toggleTheme} />} 
+            element={<Landing/>} 
           />
           <Route 
             path="/host" 
-            element={<HostQuiz theme={theme} toggleTheme={toggleTheme} />} 
+            element={<HostQuiz/>} 
           />
           <Route 
             path="/login" 
-            element={<Login theme={theme} toggleTheme={toggleTheme} />} 
+            element={<Login/>} 
           />
           <Route 
             path="/signup" 
-            element={<Signup theme={theme} toggleTheme={toggleTheme} />} 
+            element={<Signup/>} 
           />
           <Route
           path="/dashboard"
-          element={<TeacherDashboard theme={theme} toggleTheme={toggleTheme} />}
-        />
+          element={<TeacherDashboard/>}
+          />
+          <Route
+          path="/join"
+          element={<JoinGame/>}
+          />
         </Routes>
       </Router>
     </ThemeProvider>

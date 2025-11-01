@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Container, Button } from 'react-bootstrap';
-
-const AuthHeader = ({ theme, toggleTheme }) => {
+import { ThemeContext } from '../contexts/ThemeContext';
+const AuthHeader = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext);
   return (
     <header className="py-3">
       <Container>

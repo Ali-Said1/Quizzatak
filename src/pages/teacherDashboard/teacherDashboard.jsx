@@ -16,7 +16,7 @@ const TeacherDashboard = () => {
   const {theme, toggleTheme} = useContext(ThemeContext)
   return (
     <div className={`main-wrapper ${theme}`}>
-      <DashboardHeader theme={theme} toggleTheme={toggleTheme} />
+      <DashboardHeader />
       <Container className="py-4">
         {/* Section 1: Create Classroom */}
         <Card className="dashboard-card mb-4">

@@ -25,7 +25,7 @@ const Landing = () => {
 
   return (
     <div className={`main-wrapper ${theme}`}>
-      <Header theme={theme} toggleTheme={toggleTheme} />
+      <Header />
       <Container>
         <Hero />
         <Row className="mt-5 g-4">

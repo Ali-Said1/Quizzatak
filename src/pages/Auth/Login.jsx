@@ -12,7 +12,7 @@ const Login = () => {
   
   return (
     <div className={`main-wrapper ${theme}`}>
-      <AuthHeader theme={theme} toggleTheme={toggleTheme} />
+      <AuthHeader/>
       
       <Container className="auth-container">
         <Card className="quiz-card p-4" style={{ maxWidth: '450px', width: '100%' }}>

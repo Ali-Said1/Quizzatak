@@ -15,9 +15,11 @@ const Hero = () => {
         <Link to="/host">
           <Button variant="secondary" size="lg">Host a Game</Button>
         </Link>
-        <Button variant="outline-light" size="lg" className="outline-btn">
-          Join a Game
-        </Button>
+        <Link to="/join">
+          <Button variant="outline-light" size="lg" className="outline-btn">
+            Join a Game
+          </Button>
+        </Link>
       </div>
     </div>
   );
