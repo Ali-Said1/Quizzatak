@@ -8,6 +8,7 @@ function JoinGame() {
     const {theme, toggleTheme} = useContext(ThemeContext);
     const [displayName, setDisplayName] = useState('');
     const [gamePin, setGamePin] = useState('');
+    const [gameId, setGameId] = useState('');
     return ( <>
     <div className={`main-wrapper ${theme}`}>
         <Header />
@@ -17,6 +18,17 @@ function JoinGame() {
             <h3 className="text-center fw-bold mb-4">Join Game</h3>
             
             <Form>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Game ID</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  placeholder="Game ID"
+                  value={gameId}
+                  onChange={(e) => setGameId(e.target.value)}
+                />
+              </Form.Group>
+
               <Form.Group className="mb-3">
                 <Form.Label>Game PIN</Form.Label>
                 <Form.Control 
@@ -36,7 +48,6 @@ function JoinGame() {
                   onChange={(e) => setDisplayName(e.target.value)}
                 />
               </Form.Group>
-
 
             <Button 
             variant="secondary" 

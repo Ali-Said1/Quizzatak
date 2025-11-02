@@ -1,0 +1,155 @@
+============================================================================
+                                    USER
+============================================================================
+User
+{
+  id: "uuid",
+  username: "teacher1",
+  email: "teacher@gmail.com",
+  password: "hashedpassword",
+  role: "teacher", // or "student",
+  classrooms: ["classroom1", "classroom2"],
+  quizSubmissions: ["submission1, "submission2"],
+  createdAt: "2025-09-28T02:49:09Z"
+}
+
+============================================================================
+                                CLASSROOM
+============================================================================
+Classroom
+{
+  id: "uuid",
+  name: "Math 101",
+  joinCode: "ABC123",
+  teacherId: "teacherId",
+  studentIds: ["studentId1", "studentId2"],
+  quizzes: ["quiz1" , "quiz2"],
+  createdAt: "2025-09-28T02:49:09Z"
+}
+
+============================================================================
+                        QUIZ (Template - reusable)
+============================================================================
+Quiz
+{
+  id: "uuid",
+  title: "Algebra Basics",
+  classroomId: "classroomId",
+  quizSubmissions: ["submission1", "submission2"]
+  questions: [
+    {
+      id: "q1",
+      text: "What is 4+4?",
+      options: ["1", "5", "20", "8"],
+      correct: 3,
+      timer: 10  //seconds per question
+    },
+    {
+      id: "q2",
+      text: "What is 2+2?",
+      options: ["2", "3", "4", "5"],
+      correct: 2,
+      timer: 10
+    }
+  ],
+  createdAt: "2025-09-28T02:49:09Z"
+}
+
+============================================================================
+                        GAME SESSION (Live quiz instance)
+============================================================================
+GameSession
+{
+  id: "uuid",
+  quizId: "quizId",
+  classroomId: "classroomId",
+  pin: "123456",  //6-digit game pin for students to join
+  state: "waiting",  //waiting, active, ended
+  currentQuestionIndex: 0,
+  questionStartedAt: "2025-11-02T10:00:00Z",
+  connectedStudents: ["studentId1", "studentId2"],
+  startedAt: "2025-11-02T10:00:00Z",
+  endedAt: null
+}
+
+============================================================================
+                    SUBMISSION (One per student per game)
+============================================================================
+Submission
+{
+  id: "uuid",
+  gameSessionId: "gameSessionId",
+  studentId: "studentId1",
+  studentName: "John Doe",  //denormalized for leaderboard
+  answers: [
+    {
+      questionId: "q1",
+      answerIndex: 3,
+      isCorrect: true,
+      timeSpent: 5000,  //milliseconds
+      points: 1000  //base points + speed bonus
+    },
+    {
+      questionId: "q2",
+      answerIndex: 2,
+      isCorrect: true,
+      timeSpent: 3000,
+      points: 1200
+    }
+  ],
+  totalScore: 2200,
+  submittedAt: "2025-11-02T10:05:00Z"
+}
+
+
+
+
+============================================================================
+                                COMMON QUERIES
+============================================================================
+
+ Get all submissions for a game (leaderboard)
+ db.submissions.find({ gameSessionId: "xyz" }).sort({ totalScore: -1 })
+
+ Get student's submission for a game
+ db.submissions.findOne({ gameSessionId: "xyz", studentId: "abc" })
+
+ Get all games for a quiz
+ db.gameSessions.find({ quizId: "xyz" })
+
+ Check if student answered current question
+ db.submissions.findOne({ 
+   gameSessionId: "xyz", 
+   studentId: "abc",
+   "answers.questionId": "q1" 
+ })
+
+ ============================================================================
+                            SOCKET.IO EVENTS
+ ============================================================================
+
+ Teacher events:
+ - startGame({ gameSessionId })
+ - nextQuestion({ gameSessionId })
+ - endGame({ gameSessionId })
+
+ Student events:
+ - joinGame({ pin, studentId })
+ - submitAnswer({ gameSessionId, questionId, answerIndex, timeSpent })
+
+ Broadcast events:
+ - studentJoined({ studentId, studentName, totalStudents })
+ - questionStarted({ question, questionIndex, totalQuestions })
+ - answerReceived({ studentId, totalAnswered, totalStudents })
+ - questionEnded({ correctAnswer, leaderboard })
+ - gameEnded({ finalLeaderboard })
+
+ ============================================================================
+                        INDEXES (for MongoDB)
+ ============================================================================
+
+ db.gameSessions.createIndex({ pin: 1 })
+ db.gameSessions.createIndex({ quizId: 1 })
+ db.submissions.createIndex({ gameSessionId: 1, studentId: 1 })
+ db.submissions.createIndex({ gameSessionId: 1, totalScore: -1 })
+ db.classrooms.createIndex({ joinCode: 1 })
