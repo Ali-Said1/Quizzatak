@@ -1,39 +1,117 @@
-//By creating this api axios wrapper we make sure we don't have to repeat error handling or attaching tokens.
+import axios from 'axios';
+
+// Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  baseURL:
+  'http://localhost:3000',
   withCredentials: true,
   timeout: 10000,
 });
 
+// Store navigate function from React Router (set this in your App component)
+let navigate = null;
+export const setNavigate = (navFunc) => {
+  navigate = navFunc;
+};
 
-//The axios interceptor checks if there is a token and attaches it to the request before it is sent, if there is no token then 
-//the request is sent without an authorization header
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
-
-//This interceptor checks for errors after a response is received, if there is then the token is removed from local storage,
-//and the user is redirected to the login page (user not authorized) 
-api.interceptors.response.use(
-  res => res,
-  err => {
-    if (err.response?.status === 401 && 
-        !err.config.url.includes('/auth/')) {
-      localStorage.removeItem('token');
-      window.location.href = "/login";
+// REQUEST INTERCEPTOR: Attach token to every request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(err);
+    
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
+// RESPONSE INTERCEPTOR: Handle errors and token refresh
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Extract readable error message
+    const message = error.response?.data?.message || 
+                    error.response?.data?.error || 
+                    error.message || 
+                    'Something went wrong';
+    
+    // Handle 401 Unauthorized errors
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      // Don't retry auth endpoints
+      if (originalRequest.url.includes('/auth/login') || 
+          originalRequest.url.includes('/auth/register') ||
+          originalRequest.url.includes('/auth/refresh')) {
+        localStorage.removeItem('token');
+        redirectToLogin();
+        return Promise.reject({ ...error, message });
+      }
+      
+      // Mark request as retried to prevent infinite loops
+      originalRequest._retry = true;
+      
+      try {
+        // Attempt to refresh the token
+        const { data } = await axios.post(
+          `${api.defaults.baseURL}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        
+        // Save new token and retry original request
+        localStorage.setItem('token', data.token);
+        originalRequest.headers.Authorization = `Bearer ${data.token}`;
+        return api(originalRequest);
+        
+      } catch (refreshError) {
+        // Refresh failed, logout user
+        localStorage.removeItem('token');
+        redirectToLogin();
+        return Promise.reject({ ...refreshError, message: 'Session expired. Please login again.' });
+      }
+    }
+    
+    // For other errors, attach clean message and reject
+    error.message = message;
+    return Promise.reject(error);
+  }
+);
+
+// Helper function to redirect to login
+function redirectToLogin() {
+  if (navigate) {
+    navigate('/login', { replace: true });
+  } else {
+    window.location.href = '/login';
+  }
+}
+
+// Export the configured axios instance
+export default api;
+
 // Usage example:
-// Get a quiz from the quizzes endpoint
-// const response = await api.get(`/quizzes/${quizId}`);
+// 
+// In your App.jsx or main router component:
+// import { setNavigate } from './services/api';
+// import { useNavigate } from 'react-router-dom';
+// 
+// function App() {
+//   const navigate = useNavigate();
+//   useEffect(() => {
+//     setNavigate(navigate);
+//   }, [navigate]);
+// }
+//
+// In your service files:
+// import api from './api';
+// 
+// const response = await api.get('/quizzes');
 // const quiz = response.data;
