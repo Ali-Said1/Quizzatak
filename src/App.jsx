@@ -9,10 +9,12 @@ import JoinGame from './pages/JoinGame/JoinGame.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
+import { AuthProvider } from './contexts/AuthContext.jsx';
 
 export default function App() {
 
   return (
+    //<AuthProvider>
     <ThemeProvider>
       <Router>
         <Routes>
@@ -43,5 +45,6 @@ export default function App() {
         </Routes>
       </Router>
     </ThemeProvider>
+    //</AuthProvider>
   );
 }
