@@ -7,3 +7,24 @@
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+
+.role-card {
+  border: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+.role-card:hover {
+  border-color: #6c63ff;
+  background-color: #eef0ff;
+}
+
+.selected-role {
+  border-color: #6c63ff;
+  background-color: #dcd8ff;
+  box-shadow: 0 0 12px rgba(108, 99, 255, 0.6);
+  transform: scale(1.03);
+  transition: all 0.15s ease-in-out;
+}
+

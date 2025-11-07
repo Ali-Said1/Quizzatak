@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+// import { useParams } from 'react-router-dom';
 import { 
   Container, 
   Row, 
@@ -12,6 +13,8 @@ import QuizHeader from '../../components/QuizHeader';
 import './HostQuiz.css'
 import { ThemeContext } from "../../contexts/ThemeContext";
 import QuestionsPreview from '../../components/QuestionsPreview';
+import Swal from "sweetalert2";
+import quizService from '../../services/quizService';
 
 
 const HostQuiz = () => {
@@ -28,23 +31,99 @@ const HostQuiz = () => {
   
   // Simple state for preview
   const [questions, setQuestions] = useState([]);
+  // const { classroomId } = useParams();
+
+  const handleGeneratePin = async () => {
+    if (!title.trim()) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Missing Title',
+        text: 'Please add a quiz title before generating a PIN.',
+        confirmButtonColor: '#6c63ff'
+      });
+    }
+
+    if (questions.length === 0) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'No Questions',
+        text: 'Add at least one question before hosting a quiz.',
+        confirmButtonColor: '#6c63ff'
+      });
+    }
+
+    try {
+      // Step 1: Create quiz
+      const quiz = await quizService.createQuiz({
+        title,
+        classroomId,
+        questions,
+        createdAt: new Date().toISOString(),
+        quizSubmissions: []
+      });
+
+      // Step 2: Create game session for that quiz
+      const gameSession = await quizService.createGameSession({
+        quizId: quiz.id,
+        classroomId,
+        pin: Math.floor(100000 + Math.random() * 900000).toString(), // 6-digit PIN
+        state: 'waiting',
+        createdAt: new Date().toISOString()
+      });
+
+      // Step 3: Success alert with PIN
+      Swal.fire({
+        icon: 'success',
+        title: 'Quiz Hosted!',
+        html: `<p>Your quiz PIN is:</p><h2 style="color:#6c63ff">${gameSession.pin}</h2>`,
+        confirmButtonColor: '#6c63ff'
+      });
+
+      // Optional: reset fields
+      setTitle('');
+      setQuestions([]);
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to host quiz',
+        text: error.message || 'Unable to create quiz or session.',
+        confirmButtonColor: '#6c63ff'
+      });
+    }
+  };
+
   const handleAddQuestion = () => {
     // Basic validation
     if (!question || !option1 || !option2 || !option3 || !option4) {
-      console.error("Please fill out all question and option fields.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete question',
+        text: 'Please fill out the question and all four options before adding.',
+        confirmButtonColor: '#6c63ff'
+      });
       return;
     }
-    
-    // Add question to the list for preview
+
+    // Add question to preview
     const newQuestion = {
       text: question,
       options: [option1, option2, option3, option4],
       correct: correctOption,
-      timer: timer
+      timer
     };
-    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    setQuestions(prev => [...prev, newQuestion]);
 
-    // Clear form fields after adding
+    Swal.fire({
+      icon: 'success',
+      title: 'Question added!',
+      text: 'Your question has been added to the quiz preview.',
+      confirmButtonColor: '#6c63ff',
+      timer: 1500,
+      showConfirmButton: false
+    });
+
+    // Reset fields
     setQuestion('');
     setOption1('');
     setOption2('');
@@ -53,6 +132,7 @@ const HostQuiz = () => {
     setCorrectOption(1);
     setTimer(20);
   };
+
 
   return (
     // This wrapper applies your theme from App.css
@@ -168,7 +248,7 @@ const HostQuiz = () => {
           </Col>
 
           {/* Right Column: Preview */}
-          <QuestionsPreview questions={questions} />
+          <QuestionsPreview questions={questions} onGeneratePin={handleGeneratePin} />
         </Row>
       </Container>
     </div>

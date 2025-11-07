@@ -10,11 +10,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
+import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
 
 export default function App() {
 
   return (
-    //<AuthProvider>
+    // <AuthProvider>
     <ThemeProvider>
       <Router>
         <Routes>
@@ -42,9 +43,13 @@ export default function App() {
           path="/join"
           element={<JoinGame/>}
           />
+          <Route
+          path="/profile"
+          element={<ProfilePage />}
+          />
         </Routes>
       </Router>
     </ThemeProvider>
-    //</AuthProvider>
+    // </AuthProvider>
   );
 }
