@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import AuthHeader from '../../components/AuthHeader';
+import Header from '../../components/Header/Header';
 import './Auth.css';
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -64,7 +64,7 @@ const Signup = () => {
 
   return (
     <div className={`main-wrapper ${theme}`}>
-      <AuthHeader />
+      <Header />
 
       <Container className="auth-container">
         <Card className="quiz-card p-4" style={{ maxWidth: '480px', width: '100%' }}>

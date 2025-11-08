@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 const Hero = () => {
   return (
     <div className="text-center py-5 mt-5">
+
       <h1 className="display-3 fw-bold mb-3">Quizzatak</h1>
       <p className="lead mb-4 subtitle">
         Quiz. Compete. Dominate. A real-time quiz battle platform.

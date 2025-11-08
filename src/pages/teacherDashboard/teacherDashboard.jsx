@@ -1,3 +1,4 @@
+import React from 'react';
 import {useContext} from 'react';
 import {
   Container,
@@ -10,13 +11,13 @@ import {
 } from "react-bootstrap";
 import { ThemeContext } from "../../contexts/ThemeContext";
 
-import DashboardHeader from "../../components/DashboardHeader.jsx";
+import Header from "../../components/Header/Header.jsx";
 
 const TeacherDashboard = () => {
   const {theme, toggleTheme} = useContext(ThemeContext)
   return (
     <div className={`main-wrapper ${theme}`}>
-      <DashboardHeader />
+      <Header />
       <Container className="py-4">
         {/* Section 1: Create Classroom */}
         <Card className="dashboard-card mb-4">

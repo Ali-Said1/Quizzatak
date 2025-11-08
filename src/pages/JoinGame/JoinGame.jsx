@@ -1,8 +1,9 @@
+import React from 'react';
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useContext, useState } from "react";
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import './JoinGame.css';
-import Header from "../../components/Header";
+import Header from "../../components/Header/Header";
 import { Link } from "react-router-dom";
 function JoinGame() {
     const {theme, toggleTheme} = useContext(ThemeContext);

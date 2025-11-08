@@ -1,4 +1,6 @@
+import React from 'react';
 import { Card, Badge, ListGroup } from "react-bootstrap";
+import "./QuestionCard.css"
 
 function QuestionCard({ question }) {
 
@@ -14,7 +16,7 @@ function QuestionCard({ question }) {
             return (
             <ListGroup.Item
                 key={index}
-                className={`question-choice ${isCorrect ? "correct" : ""}`}
+                className={`question-choice p-2 mb-2 d-flex justify-content-between align-items-center ${isCorrect ? "correct" : ""}`}
             >
                 <span>
                 Choice {index + 1}: {option}

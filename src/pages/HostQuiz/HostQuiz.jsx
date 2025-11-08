@@ -9,10 +9,10 @@ import {
   Button, 
   InputGroup 
 } from 'react-bootstrap';
-import QuizHeader from '../../components/QuizHeader';
+import Header from '../../components/Header/Header';
 import './HostQuiz.css'
 import { ThemeContext } from "../../contexts/ThemeContext";
-import QuestionsPreview from '../../components/QuestionsPreview';
+import QuestionsPreview from '../../components/QuestionsPreview/QuestionsPreview';
 import Swal from "sweetalert2";
 import quizService from '../../services/quizService';
 
@@ -137,7 +137,7 @@ const HostQuiz = () => {
   return (
     // This wrapper applies your theme from App.css
     <div className={`main-wrapper ${theme}`}>
-      <QuizHeader/>
+      <Header/>
       <Container className="mt-4">
         <Row className="g-4">
           

@@ -15,7 +15,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
 export default function App() {
 
   return (
-    // <AuthProvider>
+    <AuthProvider>
     <ThemeProvider>
       <Router>
         <Routes>
@@ -50,6 +50,6 @@ export default function App() {
         </Routes>
       </Router>
     </ThemeProvider>
-    // </AuthProvider>
+     </AuthProvider>
   );
 }

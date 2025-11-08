@@ -1,3 +1,4 @@
+import React from 'react';
 import { Col, Card, Button } from 'react-bootstrap';
 import QuestionCard from './QuestionCard';
 

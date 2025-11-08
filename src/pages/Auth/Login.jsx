@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import AuthHeader from '../../components/AuthHeader';
+import Header from '../../components/Header/Header';
 import './Auth.css';
 import { ThemeContext } from "../../contexts/ThemeContext";
 import Swal from 'sweetalert2';
@@ -36,7 +36,7 @@ const Login = () => {
 
   return (
     <div className={`main-wrapper ${theme}`}>
-      <AuthHeader />
+      <Header />
 
       <Container className="auth-container">
         <Card className="quiz-card p-4" style={{ maxWidth: '450px', width: '100%' }}>
@@ -72,6 +72,7 @@ const Login = () => {
               >
                 Sign in
               </Button>
+              
             </Form>
 
             <p className="text-center text-muted small mt-3 mb-0">

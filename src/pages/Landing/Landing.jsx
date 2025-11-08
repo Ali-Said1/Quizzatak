@@ -1,6 +1,7 @@
+import React from "react"
 import {useContext} from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import Hero from '../../components/Hero';
 import FeatureCard from '../../components/FeatureCard';
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -24,7 +25,7 @@ const Landing = () => {
   ];
 
   return (
-    <div className={`main-wrapper ${theme}`}>
+    <div className={`main-wrapper ${theme} h-100`}>
       <Header />
       <Container>
         <Hero />
