@@ -1,7 +1,9 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import "./ProfilePage.css";
 import Header from "../../components/Header/Header";
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 function ProfilePage() {
   const { theme } = useContext(ThemeContext);
@@ -10,21 +12,16 @@ function ProfilePage() {
     Expected user object shape from API:
     {
       id: "u123",
-      name: "Ali",
+      username: "Ali",
       email: "a@mail.com",
       role: "Student",
-      memberSince: "2025-09-28T02:49:09Z"
+      createdAt: "2025-09-28T02:49:09Z"
     }
   */
 
-  const [user, setUser] = useState({
-    id: "u123",
-    name: "Ali",
-    email: "a@mail.com",
-    role: "Student",
-    memberSince: "9/28/2025, 2:49:09 AM",
-  });
-
+  const user = useAuth().user;
+  console.log(user);
+  
   return (
     <div className={`main-wrapper ${theme}`}>
       <Header />
@@ -39,7 +36,7 @@ function ProfilePage() {
           <div className="info-grid">
             <div className="form-group">
               <label>Name</label>
-              <input type="text" readOnly value={user.name} />
+              <input type="text" readOnly value={user.username} />
             </div>
             <div className="form-group">
               <label>Email</label>
@@ -51,15 +48,15 @@ function ProfilePage() {
             </div>
             <div className="form-group">
               <label>Member since</label>
-              <input type="text" readOnly value={user.memberSince} />
+              <input type="text" readOnly value={user.createdAt} />
             </div>
           </div>
 
         {/* نموذج التحديث */}
           <form>
             <div className="form-group">
-              <label htmlFor="update-name">Update name</label>
-              <input type="text" id="update-name" defaultValue={user.name} />
+              <label htmlFor="update-username">Update username</label>
+              <input type="text" id="update-username" defaultValue={user.username} />
             </div>
 
             <div className="form-group">
@@ -79,7 +76,7 @@ function ProfilePage() {
           </form>
 
           <div className="card-footer">
-            <a href="#">Go to Student Dashboard</a>
+            <Link className="fw-bolder" to="/dashboard">Go to {user.role} dashboard</Link>
           </div>
         </div>
       </div>

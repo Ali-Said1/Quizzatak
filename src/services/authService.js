@@ -50,13 +50,14 @@ const authService = {
   // Get current logged-in user
   async getCurrentUser() {
     try {
-      // const { data } = await api.get('/auth/me');
+      // const { data } = await api.get('/auth/me'); 
+      //It should be like the line above, but for now we use a placeholder user to avoid errors
       const user ={
         id: "uuid",
         username: "teacher1",
         email: "teacher@gmail.com",
         password: "hashedpassword",
-        role: "teacher", // or "student",
+        role: "student", // or "student",
         classrooms: ["classroom1", "classroom2"],
         quizSubmissions: ["submission1", "submission2"],
         createdAt: "2025-09-28T02:49:09Z"

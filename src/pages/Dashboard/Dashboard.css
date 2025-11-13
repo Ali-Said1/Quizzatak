@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dashboard-card {
+    width: 80%;
+}
+.dark .dashboard-card {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.light .dashboard-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.dark .dark-input,
+.dark .dark-select {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.light .dark-input,
+.light .dark-select {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.input-group .dark-input {
+  border-right: none !important;
+}
+
+.input-group .btn {
+  border-left: none !important;
+}
+
+/* ------------------------------
+   Buttons
+------------------------------ */
+.dark .btn-primary {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.dark .btn-primary:hover {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.light .btn-primary {
+  background-color: #ec4899;
+  border-color: #ec4899;
+}
+
+.light .btn-primary:hover {
+  background-color: #db2777;
+  border-color: #db2777;
+}
+
+.dark .btn-success {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+.dark .btn-success:hover {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+.light .btn-success {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.light .btn-success:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.card-text {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+@media (max-width: 768px) {
+  .display-3 {
+    font-size: 2.5rem;
+  }
+
+  .dashboard-card {
+    margin-bottom: 1rem !important;
+  }
+}

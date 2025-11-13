@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import ProfilePage from './pages/ProfilePage/ProfilePage.jsx';
-import TeacherDashboard from './pages/teacherDashboard/teacherDashboard.jsx';
+import TeacherDashboard from './pages/Dashboard/Dashboard.jsx';
 import GameLobby from './pages/GameLobby/GameLobby.jsx';
 import Quiz from './pages/Quiz/Quiz.jsx';
 import Landing from './pages/Landing/Landing';
@@ -11,7 +11,7 @@ import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
 import JoinGame from './pages/JoinGame/JoinGame.jsx';
 import Spinner from './components/Spinner.jsx';
-
+import NotFound from "./pages/NotFound/NotFound.jsx"
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 
@@ -56,7 +56,8 @@ export default function App() {
           <Route path="/lobby/:gameSessionId" element={<GameLobby />} />
           <Route path="/quiz/:gameSessionId" element={<Quiz />} />
           <Route path="/spinner" element={<Spinner />}/>
-          
+          <Route path="*" element={<NotFound />} />
+        
         </Routes>
       </Router>
     </ThemeProvider>
