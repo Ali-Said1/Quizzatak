@@ -16,7 +16,9 @@ import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
+import Classroom from './pages/Classroom/Classroom.jsx';
 
 export default function App() {
 
@@ -55,6 +57,7 @@ export default function App() {
           />
           <Route path="/lobby/:gameSessionId" element={<GameLobby />} />
           <Route path="/quiz/:gameSessionId" element={<Quiz />} />
+          <Route path="/classroom/:classroomId" element={<Classroom />} />
           <Route path="/spinner" element={<Spinner />}/>
           <Route path="*" element={<NotFound />} />
         

@@ -3,7 +3,6 @@ import { useNavigate , Link } from 'react-router-dom';
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useContext, useState } from "react";
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import './JoinGame.css';
 import Header from "../../components/Header/Header";
 import Swal from 'sweetalert2';
 import quizService from '../../services/quizService';
@@ -62,7 +61,7 @@ function JoinGame() {
     <div className={`main-wrapper ${theme}`}>
 
         <Header />
-        <Container className="join-container">
+        <Container className="join-container d-flex justify-content-center align-items-center flex-col" style={{height:"90vh"}}>
         <Card className="quiz-card p-4" style={{ maxWidth: '450px', width: '100%' }}>
           <Card.Body>
             <h3 className="text-center fw-bold mb-4">Join Game</h3>
@@ -85,9 +84,16 @@ function JoinGame() {
                   type="text" 
                   placeholder="6-digit PIN"
                   value={gamePin}
-                  onChange={(e) => setGamePin(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    // Only allow digits, and max length 6
+                    if (/^\d*$/.test(val) && val.length <= 6) {
+                      setGamePin(val);
+                    }
+                  }}
                 />
-              </Form.Group>
+            </Form.Group>
+
 
               <Form.Group className="mb-3">
                 <Form.Label>Display Name</Form.Label>

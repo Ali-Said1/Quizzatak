@@ -1,0 +1,39 @@
+.classroom-card.dark {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.classroom-card.light {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: black;
+}
+
+.quiz-item.dark {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  border: none;
+  margin-bottom: 0.25rem;
+}
+
+.quiz-item.light {
+  background: rgba(255, 255, 255, 0.3);
+  color: black;
+  border: none;
+  margin-bottom: 0.25rem;
+}
+
+.leaderboard-item.dark {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  border: none;
+}
+
+.leaderboard-item.light {
+  background: rgba(255, 255, 255, 0.3);
+  color: black;
+  border: none;
+}

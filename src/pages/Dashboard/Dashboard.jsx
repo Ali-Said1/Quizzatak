@@ -11,13 +11,59 @@ import { ThemeContext } from "../../contexts/ThemeContext.jsx";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import Header from "../../components/Header/Header.jsx";
 import "./Dashboard.css";
-
+import Swal from "sweetalert2";
+import classroomService from "../../services/classroomService.js";
 const TeacherDashboard = () => {
   const { theme } = useContext(ThemeContext);
   const { user } = useAuth(); // assume user.role is "teacher" or "student"
 
   const isTeacher = user?.role === "teacher";
+  const handleJoin = async (e) => {
+          e.preventDefault();
+          const code = e.target.elements["join-code"].value.trim();
+          if (!code) return;
 
+          try {
+            const classrooms = await classroomService.getAllClassrooms(); 
+            const classroom = classrooms.find((c) => c.joinCode === code);
+
+            if (!classroom) {
+              Swal.fire({
+                icon: "error",
+                title: "Classroom not found",
+                text: `No classroom found with code ${code}`,
+              });
+              return;
+            }
+
+            // Add student to classroom locally (session storage)
+            const user = JSON.parse(sessionStorage.getItem("user")) || {};
+            if (!user.classrooms) user.classrooms = [];
+            if (!user.classrooms.includes(classroom.id)) {
+              user.classrooms.push(classroom.id);
+              sessionStorage.setItem("user", JSON.stringify(user));
+            }
+
+            // Optionally update classroom's student list in session too
+            if (!classroom.students) classroom.students = [];
+            if (!classroom.students.some((s) => s.id === user.id)) {
+              classroom.students.push({ id: user.id, name: user.username, score: 0 });
+            }
+
+            Swal.fire({
+              icon: "success",
+              title: "Joined classroom!",
+              text: `You have successfully joined ${classroom.name}`,
+            });
+
+          } catch (err) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: err.message || "Failed to join classroom",
+            });
+          }
+        }
   return (
     <div className={`main-wrapper ${theme}`}>
       <Header />
@@ -118,30 +164,33 @@ const TeacherDashboard = () => {
 
         {/* --- STUDENT: Join Classroom --- */}
         {!isTeacher && (
-          <Card className="dashboard-card mb-4 quiz-card">
-            <Card.Body className="p-4">
-              <h5 className="mb-3 fw-bold text-light">Join a Classroom</h5>
-              <Form>
-                <Form.Label
-                  htmlFor="join-code"
-                  className="fw-medium text-light mb-2"
-                >
-                  Classroom Code
-                </Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    id="join-code"
-                    className="dark-input"
-                    placeholder="Enter classroom code"
-                  />
-                  <Button variant="secondary" type="submit" className="btn-join">
-                    Join
-                  </Button>
-                </InputGroup>
-              </Form>
-            </Card.Body>
-          </Card>
-        )}
+        <Card className="dashboard-card mb-4 quiz-card">
+          <Card.Body className="p-4">
+            <h5 className="mb-3 fw-bold text-light">Join a Classroom</h5>
+            <Form
+              onSubmit={handleJoin}
+            >
+              <Form.Label
+                htmlFor="join-code"
+                className="fw-medium text-light mb-2"
+              >
+                Classroom Code
+              </Form.Label>
+              <InputGroup>
+                <Form.Control
+                  id="join-code"
+                  className="dark-input"
+                  placeholder="Enter classroom code"
+                />
+                <Button variant="secondary" type="submit" className="btn-join">
+                  Join
+                </Button>
+              </InputGroup>
+            </Form>
+          </Card.Body>
+        </Card>
+      )}
+
 
         {/* --- UNIVERSAL: Your Classrooms --- */}
         <Card className="dashboard-card quiz-card">

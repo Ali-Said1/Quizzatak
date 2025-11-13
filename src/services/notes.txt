@@ -22,7 +22,20 @@ Classroom
   name: "Math 101",
   joinCode: "ABC123",
   teacherId: "teacherId",
-  studentIds: ["studentId1", "studentId2"],
+  studentIds: [
+    {
+    id: "studentId1",
+    name: "John Doe",      // denormalized for easy display
+    score: 0,              // aggregate score from submissions
+    submissions: ["subId1", "subId2"] // optional for detailed view
+    },
+    {
+    id: "studentId2",
+    name: "Johnny",
+    score: 1002,
+    submissions: ["JsubId1", "JsubId2"]
+  }
+  ],
   quizzes: ["quiz1" , "quiz2"],
   createdAt: "2025-09-28T02:49:09Z"
 }

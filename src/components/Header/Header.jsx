@@ -5,6 +5,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/quizzatak.png";
 import "./Header.css"
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 const Header = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { user, logout } = useAuth();
@@ -67,7 +68,7 @@ const Header = () => {
             )}
 
             {user && (
-              <NavDropdown
+               <NavDropdown
                 title={<span className="text-light">{user.username}</span>}
                 id="user-dropdown"
                 align="end"
@@ -77,18 +78,17 @@ const Header = () => {
                   Profile
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/dashboard">Dashboard</NavDropdown.Item>
+                <NavDropdown.Divider />
                 <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
               </NavDropdown>
+
             )}
 
-            <Button
-              variant={theme === "dark" ? "outline-light" : "outline-light"}
-              size="sm"
+            <ThemeToggle
               onClick={toggleTheme}
               className="ms-2"
-            >
-              {theme === "dark" ? "Light" : "Dark"}
-            </Button>
+            />
           </Nav>
         </Navbar.Collapse>
       </Container>

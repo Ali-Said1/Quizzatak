@@ -1,7 +1,7 @@
-/* Page wrapper uses full-height background gradients matching theme */
 body {
     padding-top: 75px
 }
+
 .notfound-wrapper {
   min-height: 100vh;
   display: flex;

@@ -1,13 +1,7 @@
-/* --- Styles for the Host Quiz Page --- */
-
 .quiz-card {
   transition: transform 0.2s;
-  /* Re-use the card styling from the theme */
 }
 
-/* These rules depend on the .dark or .light class 
-   from the main-wrapper in your component.
-*/
 .dark .quiz-card {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
