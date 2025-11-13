@@ -83,17 +83,16 @@ const quizService = {
     }
   },
 
-  // Find a game session by PIN (returns single session or null)
-  async getGameSessionByPin(pin) {
+  // Get a single game session by ID
+  async getGameSessionById(gameSessionId) {
     try {
-      const { data } = await api.get(`/game-sessions?pin=${pin}`);
-      // If backend returns array (json-server), return first; otherwise return object
-      if (Array.isArray(data)) return data[0] ?? null;
+      const { data } = await api.get(`/game-sessions/${gameSessionId}`);
       return data.gameSession ?? data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to find game session by pin');
+      throw new Error(error.message || 'Failed to fetch game session by ID');
     }
   },
+
 
   // Update a game session (e.g., change state or current question)
   async updateGameSession(gameSessionId, updateData) {

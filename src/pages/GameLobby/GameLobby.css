@@ -1,0 +1,45 @@
+/* Wrapper to give some spacing */
+.game-lobby-wrapper {
+  min-height: 100vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Card styling matching HostQuiz */
+.game-lobby-card {
+  width: 100%;
+  padding: 2rem;
+  border-radius: 1rem;
+  transition: transform 0.2s;
+}
+
+/* Dark mode card */
+.dark .game-lobby-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Light mode card */
+.light .game-lobby-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333;
+}
+
+/* Waiting text */
+.game-lobby-card h4 {
+  color: inherit;
+}
+
+/* Rows spacing */
+.game-lobby-card .row {
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.game-lobby-card .btn-secondary {
+  color: white;
+}

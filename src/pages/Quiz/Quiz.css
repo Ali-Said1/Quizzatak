@@ -1,0 +1,103 @@
+/* --- Shared Card Styling --- */
+.quiz-card {
+  transition: transform 0.2s;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* --- Dark Mode --- */
+.dark .quiz-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* --- Light Mode --- */
+.light .quiz-card {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333;
+}
+
+/* Question Styling */
+.question-text {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Options List */
+.options-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.option-item {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.dark .option-item {
+  background: rgba(0,0,0,0.2);
+  color: white;
+}
+
+.light .option-item {
+  background: rgba(255,255,255,0.3);
+  color: #333;
+}
+
+/* Hover & Selected */
+.light .option-item:hover {
+    border-color: #ec4899;
+}
+
+.light .option-item.selected {
+  background-color: #ec4899;
+  color: white;
+  border-color: #ec4899;
+}
+
+.dark .option-item:hover {
+    border-color: #8b5cf6;
+}
+
+.dark .option-item.selected {
+  background-color: #8b5cf6;
+  color: white;
+  border-color: #8b5cf6;
+}
+
+
+/* Results Styling */
+.results-card .result-question {
+  margin-bottom: 1.5rem;
+}
+
+.results-card .option-item {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Correct & Wrong Colors */
+.results-card .option-item.correct {
+  background-color: #10b981;
+  color: white;
+}
+
+.results-card .option-item.wrong {
+  background-color: #ef4444;
+  color: white;
+}
