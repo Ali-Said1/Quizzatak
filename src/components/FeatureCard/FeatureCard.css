@@ -1,0 +1,63 @@
+.feature-card {
+  border-radius: 12px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.25s ease;
+  cursor: default;
+  overflow: hidden;
+}
+
+.feature-card.dark,
+.main-wrapper.dark .feature-card {
+  background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+  color: #FCE7F3;
+  border: 1px solid rgba(236,72,153,0.08);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.6);
+}
+.feature-card.dark .card-title,
+.main-wrapper.dark .feature-card .card-title {
+  color: #FCE7F3;
+  font-weight: 700;
+}
+.feature-card.dark .card-text,
+.main-wrapper.dark .feature-card .card-text {
+  color: rgba(252,231,243,0.92);
+}
+.feature-card.dark:hover,
+.main-wrapper.dark .feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(15,23,42,0.8), 0 0 18px rgba(236,72,153,0.12);
+}
+
+/* ===== LIGHT THEME (REPLACE EXISTING LIGHT BLOCK WITH THIS) ===== */
+.feature-card.light,
+.main-wrapper.light .feature-card {
+  /* softened pink base that complements the page gradient */
+  background: linear-gradient(180deg, rgba(248, 176, 217, 0.98) 0%, rgba(255,255,255,0.98) 100%);
+  color: #0F172A !important; /* deep navy for main text */
+  border: 1px solid rgba(236,72,153,0.18);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+}
+
+/* Ensure title and body text are dark (higher specificity + !important to override any lingering rules) */
+.feature-card.light .card-title,
+.main-wrapper.light .feature-card .card-title {
+  color: #0F172A !important;
+  font-weight: 700;
+}
+
+.feature-card.light .card-text,
+.main-wrapper.light .feature-card .card-text {
+  color: rgba(15,23,42,0.85) !important;
+}
+
+/* Hover state for light mode (keeps subtle pink glow) */
+.feature-card.light:hover,
+.main-wrapper.light .feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(236,72,153,0.18);
+}
+
+
+@media (max-width: 576px) {
+  .feature-card .card-title { font-size: 1rem; }
+  .feature-card .card-text { font-size: 0.85rem; }
+}

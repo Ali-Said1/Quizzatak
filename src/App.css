@@ -42,26 +42,6 @@
   color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Feature Cards (if used elsewhere) */
-.dark .feature-card {
-  background: rgba(30, 41, 59, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  transition: transform 0.2s;
-}
-
-.light .feature-card {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  transition: transform 0.2s;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-}
 
 .card-text {
   color: rgba(255, 255, 255, 0.85) !important;

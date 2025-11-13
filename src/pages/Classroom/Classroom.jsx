@@ -63,9 +63,9 @@ const Classroom = () => {
             <Collapse in={showLeaderboard}>
               <div className="mt-3">
                 <h6 className="fw-bold">Leaderboard</h6>
-                {classroom.students.length > 0 ? (
+                {classroom.studentIds.length > 0 ? (
                   <ListGroup>
-                    {classroom.students
+                    {classroom.studentIds
                       .sort((a, b) => b.score - a.score)
                       .map((s, idx) => (
                         <ListGroup.Item
