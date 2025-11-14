@@ -9,10 +9,10 @@ const { ObjectId } = mongoose.Types;
 
 const calculatePoints = (question, timeSpentMs = 0) => {
   if (!question) return 0;
-  const base = 1000;
+  const base = 100;
   const maxTime = (question.timer || 10) * 1000;
   const timeSafe = Math.max(0, Math.min(timeSpentMs, maxTime));
-  const speedBonus = Math.round(((maxTime - timeSafe) / maxTime) * 200);
+  const speedBonus = Math.round(((maxTime - timeSafe) / maxTime) * 20);
   return base + speedBonus;
 };
 

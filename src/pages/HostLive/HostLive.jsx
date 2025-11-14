@@ -481,7 +481,7 @@ const HostLive = () => {
 
         <Card className="quiz-card p-4 mb-4">
           <Card.Body>
-            <h5 className="mb-3">Roster</h5>
+            <h5 className="mb-3">Students</h5>
             {studentRoster.length === 0 ? (
               <p className="text-muted mb-0">No students have joined yet.</p>
             ) : (
