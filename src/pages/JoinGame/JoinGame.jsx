@@ -7,7 +7,7 @@ import Header from "../../components/Header/Header";
 import Swal from 'sweetalert2';
 import quizService from '../../services/quizService';
 function JoinGame() {
-    const {theme, toggleTheme} = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
     const [displayName, setDisplayName] = useState('');
     const [gamePin, setGamePin] = useState('');
     const [gameId, setGameId] = useState('');

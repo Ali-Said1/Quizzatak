@@ -1,28 +1,31 @@
 import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import './Auth.css';
 import { ThemeContext } from "../../contexts/ThemeContext";
+import { useAuth } from "../../contexts/AuthContext";
 import Swal from 'sweetalert2';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { theme } = useContext(ThemeContext);
-  // const { login } = useAuth();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // await login({ email, password });
-      Swal.fire({
+      await login(email, password);
+      await Swal.fire({
         icon: 'success',
         title: 'Welcome back!',
         text: 'You have logged in successfully.',
         confirmButtonColor: '#6c63ff'
       });
+      navigate('/dashboard');
     } catch (err) {
       console.error(err);
       Swal.fire({

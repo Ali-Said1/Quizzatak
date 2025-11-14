@@ -22,7 +22,9 @@ export const validateSignup = ({ name, email, password }) => {
     if (!password) {
       errors.password = "Password is required";
     } else if (
-      !/^(?=.*[A-Z])(?=.*\d)(?=.*[@#\$!%*?&])[A-Za-z\d@#\$!%*?&]{6,}$/.test(password)
+      !/^(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/.test(
+        password
+      )
     ) {
       errors.password =
         "Password must be ≥6 chars and include one uppercase letter, one number, and one symbol (@, #, $, etc.)";

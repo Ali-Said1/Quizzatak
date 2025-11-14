@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const currentUser = await authService.getCurrentUser();
         setUser(currentUser);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -39,9 +39,45 @@ export const AuthProvider = ({ children }) => {
     await authService.logoutUser();
     setUser(null);
   };
-  const value = useMemo(() => ({
-  user, loading, isAuthenticated: !!user, login, register, logout
-    }), [user, loading]);
+
+  const refreshUser = async () => {
+    if (!authService.getToken()) {
+      setUser(null);
+      return null;
+    }
+    try {
+      const current = await authService.getCurrentUser();
+      setUser(current);
+      return current;
+    } catch (error) {
+      setUser(null);
+      throw error;
+    }
+  };
+
+  const updateProfile = async (updates) => {
+    const updated = await authService.updateUserProfile(updates);
+    setUser(updated);
+    return updated;
+  };
+
+  const changePassword = (currentPassword, newPassword) =>
+    authService.changeUserPassword(currentPassword, newPassword);
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      isAuthenticated: !!user,
+      login,
+      register,
+      logout,
+      refreshUser,
+      updateProfile,
+      changePassword,
+    }),
+    [user, loading]
+  );
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
@@ -50,4 +86,5 @@ export const AuthProvider = ({ children }) => {
 };
 
 // Custom hook for easy access
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

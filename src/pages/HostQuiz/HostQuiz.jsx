@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 // import { useParams } from 'react-router-dom';
 import { 
   Container, 
@@ -15,6 +15,8 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 import QuestionsPreview from '../../components/QuestionsPreview/QuestionsPreview';
 import Swal from "sweetalert2";
 import quizService from '../../services/quizService';
+import classroomService from '../../services/classroomService.js';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
 
 const HostQuiz = () => {
@@ -28,10 +30,65 @@ const HostQuiz = () => {
   const [correctOption, setCorrectOption] = useState(1); // Default to option 1
   const [timer, setTimer] = useState(20);
   const {theme} = useContext(ThemeContext)
-  
+  const { user } = useAuth();
+  const [classrooms, setClassrooms] = useState([]);
+  const [selectedClassroom, setSelectedClassroom] = useState('');
+  const [loadingClassrooms, setLoadingClassrooms] = useState(false);
+  const [hosting, setHosting] = useState(false);
+
   // Simple state for preview
   const [questions, setQuestions] = useState([]);
   // const { classroomId } = useParams();
+
+  useEffect(() => {
+    const fetchClassrooms = async () => {
+      if (user?.role !== 'teacher') return;
+      setLoadingClassrooms(true);
+      try {
+        const data = await classroomService.getAllClassrooms();
+        const parsed = Array.isArray(data) ? data : data?.classrooms ?? [];
+        setClassrooms(parsed);
+        if (parsed.length) {
+          setSelectedClassroom(parsed[0].id);
+        }
+      } catch (error) {
+        Swal.fire({ icon: 'error', title: 'Failed to load classrooms', text: error.message });
+      } finally {
+        setLoadingClassrooms(false);
+      }
+    };
+    fetchClassrooms();
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div className={`main-wrapper ${theme}`}>
+        <Header />
+        <Container className="py-5">
+          <Card className="quiz-card p-4">
+            <Card.Body className="text-center">
+              <h4>Please sign in to host quizzes.</h4>
+            </Card.Body>
+          </Card>
+        </Container>
+      </div>
+    );
+  }
+
+  if (user.role !== 'teacher') {
+    return (
+      <div className={`main-wrapper ${theme}`}>
+        <Header />
+        <Container className="py-5">
+          <Card className="quiz-card p-4">
+            <Card.Body className="text-center">
+              <h4>You need a teacher account to host quizzes.</h4>
+            </Card.Body>
+          </Card>
+        </Container>
+      </div>
+    );
+  }
 
   const handleGeneratePin = async () => {
     if (!title.trim()) {
@@ -52,11 +109,20 @@ const HostQuiz = () => {
       });
     }
 
+    if (!selectedClassroom) {
+      return Swal.fire({
+        icon: 'warning',
+        title: 'Select classroom',
+        text: 'Choose a classroom to host this quiz.',
+      });
+    }
+
     try {
+      setHosting(true);
       // Step 1: Create quiz
       const quiz = await quizService.createQuiz({
         title,
-        classroomId,
+        classroomId: selectedClassroom,
         questions,
         createdAt: new Date().toISOString(),
         quizSubmissions: []
@@ -65,7 +131,7 @@ const HostQuiz = () => {
       // Step 2: Create game session for that quiz
       const gameSession = await quizService.createGameSession({
         quizId: quiz.id,
-        classroomId,
+        classroomId: selectedClassroom,
         pin: Math.floor(100000 + Math.random() * 900000).toString(), // 6-digit PIN
         state: 'waiting',
         createdAt: new Date().toISOString()
@@ -90,6 +156,8 @@ const HostQuiz = () => {
         text: error.message || 'Unable to create quiz or session.',
         confirmButtonColor: '#6c63ff'
       });
+    } finally {
+      setHosting(false);
     }
   };
 
@@ -139,6 +207,26 @@ const HostQuiz = () => {
     <div className={`main-wrapper ${theme}`}>
       <Header/>
       <Container className="mt-4">
+        <Card className="quiz-card p-4 mb-4">
+          <Card.Body>
+            <h5 className="mb-3">Select Classroom</h5>
+            <Form.Select
+              value={selectedClassroom}
+              onChange={(e) => setSelectedClassroom(e.target.value)}
+              disabled={loadingClassrooms || classrooms.length === 0}
+            >
+              {classrooms.length === 0 ? (
+                <option>No classrooms available</option>
+              ) : (
+                classrooms.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))
+              )}
+            </Form.Select>
+          </Card.Body>
+        </Card>
         <Row className="g-4">
           
           {/* Left Column: Quiz Builder */}
@@ -248,7 +336,7 @@ const HostQuiz = () => {
           </Col>
 
           {/* Right Column: Preview */}
-          <QuestionsPreview questions={questions} onGeneratePin={handleGeneratePin} />
+          <QuestionsPreview questions={questions} onGeneratePin={handleGeneratePin} isGenerating={hosting} />
         </Row>
       </Container>
     </div>

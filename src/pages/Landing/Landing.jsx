@@ -8,7 +8,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 
 
 const Landing = () => {
-  const {theme, toggleTheme} = useContext(ThemeContext)
+  const { theme } = useContext(ThemeContext)
   const features = [
     {
       title: 'Live Leaderboards',

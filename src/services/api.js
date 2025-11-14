@@ -1,10 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.trim() || "http://localhost:5000";
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL:
-  'http://localhost:3000',
-  // withCredentials: true,
+  baseURL: API_BASE_URL,
+  withCredentials: true,
   timeout: 10000,
 });
 
@@ -17,12 +19,11 @@ export const setNavigate = (navFunc) => {
 // REQUEST INTERCEPTOR: Attach token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    
+
     return config;
   },
   (error) => {
@@ -37,27 +38,30 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    
+
     // Extract readable error message
-    const message = error.response?.data?.message || 
-                    error.response?.data?.error || 
-                    error.message || 
-                    'Something went wrong';
-    
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      "Something went wrong";
+
     // Handle 401 Unauthorized errors
     if (error.response?.status === 401 && !originalRequest._retry) {
       // Don't retry auth endpoints
-      if (originalRequest.url.includes('/auth/login') || 
-          originalRequest.url.includes('/auth/register') ||
-          originalRequest.url.includes('/auth/refresh')) {
-        localStorage.removeItem('token');
+      if (
+        originalRequest.url.includes("/auth/login") ||
+        originalRequest.url.includes("/auth/register") ||
+        originalRequest.url.includes("/auth/refresh")
+      ) {
+        localStorage.removeItem("token");
         redirectToLogin();
         return Promise.reject({ ...error, message });
       }
-      
+
       // Mark request as retried to prevent infinite loops
       originalRequest._retry = true;
-      
+
       try {
         // Attempt to refresh the token
         const { data } = await axios.post(
@@ -65,20 +69,22 @@ api.interceptors.response.use(
           {},
           { withCredentials: true }
         );
-        
+
         // Save new token and retry original request
-        localStorage.setItem('token', data.token);
+        localStorage.setItem("token", data.token);
         originalRequest.headers.Authorization = `Bearer ${data.token}`;
         return api(originalRequest);
-        
       } catch (refreshError) {
         // Refresh failed, logout user
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         redirectToLogin();
-        return Promise.reject({ ...refreshError, message: 'Session expired. Please login again.' });
+        return Promise.reject({
+          ...refreshError,
+          message: "Session expired. Please login again.",
+        });
       }
     }
-    
+
     // For other errors, attach clean message and reject
     error.message = message;
     return Promise.reject(error);
@@ -88,9 +94,9 @@ api.interceptors.response.use(
 // Helper function to redirect to login
 function redirectToLogin() {
   if (navigate) {
-    navigate('/login', { replace: true });
+    navigate("/login", { replace: true });
   } else {
-    window.location.href = '/login';
+    window.location.href = "/login";
   }
 }
 
@@ -98,11 +104,11 @@ function redirectToLogin() {
 export default api;
 
 // Usage example:
-// 
+//
 // In your App.jsx or main router component:
 // import { setNavigate } from './services/api';
 // import { useNavigate } from 'react-router-dom';
-// 
+//
 // function App() {
 //   const navigate = useNavigate();
 //   useEffect(() => {
@@ -112,6 +118,6 @@ export default api;
 //
 // In your service files:
 // import api from './api';
-// 
+//
 // const response = await api.get('/quizzes');
 // const quiz = response.data;

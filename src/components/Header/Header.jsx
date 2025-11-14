@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Navbar, Container, Nav, Button, NavDropdown } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/quizzatak.png";
@@ -10,6 +10,16 @@ const Header = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   return (
     <Navbar
@@ -80,7 +90,7 @@ const Header = () => {
                 <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="/dashboard">Dashboard</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
               </NavDropdown>
 
             )}

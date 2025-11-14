@@ -1,106 +1,101 @@
-import api from './api.js';
+import api from "./api.js";
 
 const authService = {
   // Register a new user
   async registerUser({ username, email, password, role }) {
     try {
-      const { data } = await api.post('/auth/register', {
+      const { data } = await api.post("/auth/register", {
         username,
         email,
         password,
-        role
+        role,
       });
-      
+
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem("token", data.token);
       }
-      
+
       return data; // { user, token }
     } catch (error) {
-      throw new Error(error.message || 'Registration failed');
+      throw new Error(error.message || "Registration failed");
     }
   },
 
   // Login user
   async loginUser(email, password) {
     try {
-      const { data } = await api.post('/auth/login', { email, password });
-      
+      const { data } = await api.post("/auth/login", { email, password });
+
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem("token", data.token);
       }
-      
+
       return data; // { user, token }
     } catch (error) {
-      throw new Error(error.message || 'Login failed');
+      throw new Error(error.message || "Login failed");
     }
   },
 
   // Logout current user
   async logoutUser() {
     try {
-      await api.post('/auth/logout');
+      await api.post("/auth/logout");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     }
   },
 
   // Get current logged-in user
   async getCurrentUser() {
     try {
-      // const { data } = await api.get('/auth/me'); 
-      //It should be like the line above, but for now we use a placeholder user to avoid errors
-      const user ={
-        id: "uuid",
-        username: "teacher1",
-        email: "teacher@gmail.com",
-        password: "hashedpassword",
-        role: "student", // or "student",
-        classrooms: ["classroom1", "classroom2"],
-        quizSubmissions: ["submission1", "submission2"],
-        createdAt: "2025-09-28T02:49:09Z"
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return null;
       }
-
-      return user;
+      const { data } = await api.get("/auth/me");
+      return data.user ?? data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to get user');
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+      }
+      throw new Error(error.message || "Failed to get user");
     }
   },
 
   // Check if user is authenticated
   isAuthenticated() {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem("token");
   },
 
   // Get stored token
   getToken() {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   },
 
   // Update user profile
   async updateUserProfile(updates) {
     try {
-      const { data } = await api.patch('/auth/profile', updates);
+      const { data } = await api.patch("/auth/profile", updates);
       return data.user;
     } catch (error) {
-      throw new Error(error.message || 'Failed to update profile');
+      throw new Error(error.message || "Failed to update profile");
     }
   },
 
   // Change user password
   async changeUserPassword(currentPassword, newPassword) {
     try {
-      const { data } = await api.post('/auth/change-password', {
+      const { data } = await api.post("/auth/change-password", {
         currentPassword,
-        newPassword
+        newPassword,
       });
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to change password');
+      throw new Error(error.message || "Failed to change password");
     }
-  }
+  },
 };
 
 export default authService;

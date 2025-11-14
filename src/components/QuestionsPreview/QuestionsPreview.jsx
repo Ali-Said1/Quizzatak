@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Card, Button } from 'react-bootstrap';
 import QuestionCard from './QuestionCard';
 
-function QuestionsPreview({ questions, onGeneratePin }) {
+function QuestionsPreview({ questions, onGeneratePin, isGenerating = false }) {
   return (
     <Col md={5}>
       <Card className="quiz-card p-4">
@@ -31,10 +31,10 @@ function QuestionsPreview({ questions, onGeneratePin }) {
           <Button
             variant="success"
             className="w-100 mt-4"
-            disabled={questions.length === 0}
+            disabled={questions.length === 0 || isGenerating}
             onClick={onGeneratePin}
           >
-            Generate Game PIN & Go to Lobby
+            {isGenerating ? 'Generating...' : 'Generate Game PIN & Go to Lobby'}
           </Button>
         </Card.Body>
       </Card>

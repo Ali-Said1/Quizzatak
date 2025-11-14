@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import {  
   Row,
   Col,
@@ -7,6 +7,7 @@ import {
   Button,
   InputGroup,
 } from "react-bootstrap";
+import Spinner from "../../components/Spinner.jsx";
 import { ThemeContext } from "../../contexts/ThemeContext.jsx";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import Header from "../../components/Header/Header.jsx";
@@ -16,54 +17,95 @@ import classroomService from "../../services/classroomService.js";
 const TeacherDashboard = () => {
   const { theme } = useContext(ThemeContext);
   const { user } = useAuth(); // assume user.role is "teacher" or "student"
-
+  const [newClassroom, setNewClassroom] = useState('');
+  const [classrooms, setClassrooms] = useState([]);
+  const [loadingClassrooms, setLoadingClassrooms] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [joining, setJoining] = useState(false);
   const isTeacher = user?.role === "teacher";
-  const handleJoin = async (e) => {
-          e.preventDefault();
-          const code = e.target.elements["join-code"].value.trim();
-          if (!code) return;
 
-          try {
-            const classrooms = await classroomService.getAllClassrooms(); 
-            const classroom = classrooms.find((c) => c.joinCode === code);
+  const loadClassrooms = useCallback(async () => {
+    if (!user) return;
+    setLoadingClassrooms(true);
+    try {
+      const data = await classroomService.getAllClassrooms();
+      // API may return { classrooms: [...] } or the array directly
+      setClassrooms(Array.isArray(data) ? data : data?.classrooms ?? []);
+    } catch (err) {
+      Swal.fire({ icon: "error", title: "Error", text: err.message || "Failed to load classrooms" });
+    } finally {
+      setLoadingClassrooms(false);
+    }
+  }, [user]);
 
-            if (!classroom) {
-              Swal.fire({
-                icon: "error",
-                title: "Classroom not found",
-                text: `No classroom found with code ${code}`,
-              });
-              return;
-            }
+  useEffect(() => {
+    loadClassrooms();
+  }, [loadClassrooms]);
+  const handleJoin = async (event) => {
+    event.preventDefault();
+    const joinCode = event.target.elements["join-code"].value.trim().toUpperCase();
+    if (!joinCode) {
+      Swal.fire({ icon: "warning", title: "Missing code", text: "Please enter a classroom code." });
+      return;
+    }
+    setJoining(true);
+    try {
+      const classroom = await classroomService.joinClassroom(joinCode);
+      await loadClassrooms();
+      event.target.reset();
+      Swal.fire({
+        icon: "success",
+        title: "Joined classroom!",
+        text: `You're now part of ${classroom.name}.`,
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Unable to join",
+        text: err.message || "Failed to join classroom",
+      });
+    } finally {
+      setJoining(false);
+    }
+  };
 
-            // Add student to classroom locally (session storage)
-            const user = JSON.parse(sessionStorage.getItem("user")) || {};
-            if (!user.classrooms) user.classrooms = [];
-            if (!user.classrooms.includes(classroom.id)) {
-              user.classrooms.push(classroom.id);
-              sessionStorage.setItem("user", JSON.stringify(user));
-            }
 
-            // Optionally update classroom's student list in session too
-            if (!classroom.students) classroom.students = [];
-            if (!classroom.students.some((s) => s.id === user.id)) {
-              classroom.students.push({ id: user.id, name: user.username, score: 0 });
-            }
+  const handleCreateClassroom = (event) => {
+    event.preventDefault(); 
+    (async () => {
+      try {
+        await classroomService.createClassroom(newClassroom);
+        setNewClassroom('');
+        await loadClassrooms();
+        Swal.fire({ icon: 'success', title: 'Classroom created' });
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to create classroom' });
+      }
+    })();
+  };
 
-            Swal.fire({
-              icon: "success",
-              title: "Joined classroom!",
-              text: `You have successfully joined ${classroom.name}`,
-            });
-
-          } catch (err) {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: err.message || "Failed to join classroom",
-            });
-          }
-        }
+  const handleDeleteClassroom = async (classroomId, classroomName) => {
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: 'Delete classroom?',
+      text: `This will remove ${classroomName} and all associated sessions/quizzes.`,
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+    });
+    if (!result.isConfirmed) return;
+    setDeletingId(classroomId);
+    try {
+      await classroomService.deleteClassroom(classroomId);
+      await loadClassrooms();
+      Swal.fire({ icon: 'success', title: 'Classroom deleted' });
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to delete classroom' });
+    } finally {
+      setDeletingId(null);
+    }
+  };
   return (
     <div className={`main-wrapper ${theme}`}>
       <Header />
@@ -72,7 +114,7 @@ const TeacherDashboard = () => {
         {isTeacher && (
           <Card className="dashboard-card mb-4">
             <Card.Body className="p-4">
-              <Form>
+              <Form onSubmit={handleCreateClassroom}>
                 <Form.Label
                   htmlFor="classroom-name"
                   className="fw-medium text-light mb-2"
@@ -83,6 +125,8 @@ const TeacherDashboard = () => {
                   <Form.Control
                     id="classroom-name"
                     className="dark-input"
+                    value={newClassroom}
+                    onChange={(e) => setNewClassroom(e.target.value)}
                     placeholder="e.g., Grade 10 Physics"
                   />
                   <Button
@@ -107,9 +151,15 @@ const TeacherDashboard = () => {
                 <Form.Label className="text-light mb-2">
                   Select classroom
                 </Form.Label>
-                <Form.Select className="dark-select">
-                  <option>Select a classroom...</option>
-                  {/* Map classrooms here */}
+                <Form.Select className="dark-select" defaultValue="">
+                  <option value="" disabled>
+                    Select a classroom...
+                  </option>
+                  {classrooms.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
 
@@ -182,8 +232,8 @@ const TeacherDashboard = () => {
                   className="dark-input"
                   placeholder="Enter classroom code"
                 />
-                <Button variant="secondary" type="submit" className="btn-join">
-                  Join
+                <Button variant="secondary" type="submit" className="btn-join" disabled={joining}>
+                  {joining ? "Joining..." : "Join"}
                 </Button>
               </InputGroup>
             </Form>
@@ -196,9 +246,39 @@ const TeacherDashboard = () => {
         <Card className="dashboard-card quiz-card">
           <Card.Body className="p-4">
             <h5 className="mb-3 fw-bold text-light">Your Classrooms</h5>
-            <p className="text-muted-custom mb-0">
-              No classrooms yet. {isTeacher ? "Create one above." : "Join one above."}
-            </p>
+            {loadingClassrooms ? (
+              <div className="d-flex justify-content-center py-3">
+                <Spinner />
+              </div>
+            ) : classrooms && classrooms.length ? (
+              <div className="list-group">
+                {classrooms.map((c) => (
+                  <div key={c.id} className="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                      <div className="fw-semibold text-light">{c.name}</div>
+                      <small className="text-muted-custom">Code: {c.joinCode}</small>
+                    </div>
+                    <div className="d-flex gap-2">
+                      {!isTeacher && (
+                        <Button variant="outline-light" size="sm">Open</Button>
+                      )}
+                      {isTeacher && (
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          disabled={deletingId === c.id}
+                          onClick={() => handleDeleteClassroom(c.id, c.name)}
+                        >
+                          {deletingId === c.id ? 'Deleting…' : 'Delete'}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-custom mb-0">No classrooms yet. {isTeacher ? "Create one above." : "Join one above."}</p>
+            )}
           </Card.Body>
         </Card>
       </div>

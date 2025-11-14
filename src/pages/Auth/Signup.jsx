@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Container, Card, Form, Button, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import './Auth.css';
 import { ThemeContext } from "../../contexts/ThemeContext";
@@ -15,7 +15,8 @@ const Signup = () => {
     password: '',
     role: 'student'
   });
-  // const {register} = useAuth()
+  const {register} = useAuth()
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const { theme } = useContext(ThemeContext);
 
@@ -43,12 +44,13 @@ const Signup = () => {
         role: formData.role
       });
 
-      Swal.fire({
+      await Swal.fire({
         icon: 'success',
         title: 'Account created!',
         text: 'Your account has been registered successfully.',
         confirmButtonColor: '#6c63ff'
       });
+      navigate('/dashboard');
 
     } catch (err) {
       console.error(err);
