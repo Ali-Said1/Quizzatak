@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./ProfilePage.css";
@@ -20,6 +20,18 @@ function ProfilePage() {
       setProfileForm({ username: user.username || "", email: user.email || "" });
     }
   }, [user]);
+
+  const formattedJoinDate = useMemo(() => {
+    if (!user?.createdAt) return "";
+    try {
+      return new Intl.DateTimeFormat("en-US", {
+        dateStyle: "long",
+        timeStyle: "short",
+      }).format(new Date(user.createdAt));
+    } catch {
+      return user.createdAt;
+    }
+  }, [user?.createdAt]);
 
   if (!user) {
     return null;
@@ -95,7 +107,7 @@ function ProfilePage() {
             </div>
             <div className="form-group">
               <label>Member since</label>
-              <input type="text" readOnly value={user.createdAt} />
+              <input type="text" readOnly value={formattedJoinDate} />
             </div>
           </div>
 

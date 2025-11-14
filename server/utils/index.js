@@ -1,22 +1,31 @@
 import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import { Buffer } from "buffer";
 
 export const randomId = () => crypto.randomUUID();
 export const nowISO = () => new Date().toISOString();
 
-export const hashPassword = (
-  password,
-  salt = crypto.randomBytes(16).toString("hex")
-) => {
-  const hash = crypto
-    .pbkdf2Sync(password, salt, 10000, 64, "sha512")
-    .toString("hex");
-  return `${salt}:${hash}`;
-};
+const BCRYPT_ROUNDS = Number(process.env.BCRYPT_ROUNDS || 12);
+
+export const hashPassword = (password) =>
+  bcrypt.hashSync(password, BCRYPT_ROUNDS);
+
+const isBcryptHash = (hash = "") =>
+  typeof hash === "string" &&
+  hash.startsWith("$2") &&
+  hash.split("$").length >= 4;
 
 export const verifyPassword = (password, stored) => {
   if (!stored) return false;
+  if (isBcryptHash(stored)) {
+    try {
+      return bcrypt.compareSync(password, stored);
+    } catch {
+      return false;
+    }
+  }
   const [salt, originalHash] = stored.split(":");
+  if (!salt || !originalHash) return false;
   const comparison = crypto
     .pbkdf2Sync(password, salt, 10000, 64, "sha512")
     .toString("hex");

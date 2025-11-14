@@ -6,25 +6,18 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Card,
-  Button,
-  Row,
-  Col,
-  Badge,
-  ListGroup,
-  ProgressBar,
-} from "react-bootstrap";
+import { Button, Card, Container, ListGroup } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+
 import Header from "../../components/Header/Header";
 import Spinner from "../../components/Spinner";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import quizService from "../../services/quizService";
 import classroomService from "../../services/classroomService";
-import { connectSocket, getSocket, disconnectSocket } from "../../services/socketClient";
+import { connectSocket, disconnectSocket, getSocket } from "../../services/socketClient";
+
 import "./HostLive.css";
 
 const HostLive = () => {
@@ -41,11 +34,11 @@ const HostLive = () => {
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState("waiting");
   const [questionPayload, setQuestionPayload] = useState(null);
-  const [resultQuestion, setResultQuestion] = useState(null);
-  const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [, setResultQuestion] = useState(null);
+  const [, setCorrectAnswer] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
   const [finalLeaderboard, setFinalLeaderboard] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [, setTimeLeft] = useState(0);
   const timerRef = useRef(null);
   const sessionRef = useRef(null);
   const questionPayloadRef = useRef(null);
@@ -378,6 +371,19 @@ const HostLive = () => {
   //   );
   // };
 
+  const lobbyLink = useMemo(() => {
+    if (!session?.id) return "";
+    try {
+      const current = new URL(window.location.href);
+      current.pathname = `/lobby/${session.id}`;
+      current.search = "";
+      current.hash = "";
+      return current.toString();
+    } catch {
+      return `${window?.location?.origin || ""}/lobby/${session.id}`;
+    }
+  }, [session?.id]);
+
   if (loading) {
     return (
       <div className={`main-wrapper ${theme}`}>
@@ -408,67 +414,127 @@ const HostLive = () => {
   return (
     <div className={`main-wrapper host-live ${theme}`}>
       <Header />
-      <Container className="py-4">
-        <Card className="quiz-card p-4 mb-4">
+      <Container fluid className="py-4 host-live-container">
+        <Card className="quiz-card p-4 mb-4 host-controls-card">
           <Card.Body>
-            <Row>
-              <Col md={6}>
-                <h4 className="mb-3">Live Session Controls</h4>
-                <p className="mb-1"><strong>Quiz:</strong> {session.quizTitle || session.quizId}</p>
-                <p className="mb-1"><strong>Classroom:</strong> {classroom?.name}</p>
-                <div className="mb-2 d-flex align-items-center gap-2 flex-wrap">
-                  <strong className="mb-0">Game Code:</strong>
-                  <span className="fs-5 fw-bold">{session.shareCode}</span>
-                  <Button
-                    size="sm"
-                    variant="outline-light"
-                    onClick={() => copyValue(session.shareCode, "Game Code")}
-                  >
-                    Copy
-                  </Button>
+            <div className="host-live-main">
+              <div className="host-live-left">
+                <div className="host-primary-panel">
+                  <div>
+                    <h4 className="mb-3">Live Session Controls</h4>
+                    <p className="mb-1"><strong>Quiz:</strong> {session.quizTitle || session.quizId}</p>
+                    <p className="mb-4"><strong>Classroom:</strong> {classroom?.name}</p>
+
+                    <div className="share-chips mb-3">
+                      <div className="share-chip">
+                        <div className="label">Game Code</div>
+                        <div className="value">{session.shareCode}</div>
+                        <Button
+                          size="sm"
+                          variant="outline-light"
+                          onClick={() => copyValue(session.shareCode, "Game Code")}
+                        >
+                          <i className="bi bi-clipboard" /> Copy
+                        </Button>
+                      </div>
+                      <div className="share-chip">
+                        <div className="label">PIN</div>
+                        <div className="value">{session.pin}</div>
+                        <Button
+                          size="sm"
+                          variant="outline-light"
+                          onClick={() => copyValue(session.pin, "PIN")}
+                        >
+                          <i className="bi bi-clipboard" /> Copy
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Button
+                      className="lobby-link-btn mb-4"
+                      variant="outline-info"
+                      onClick={() => copyValue(lobbyLink, "Game Link")}
+                      disabled={!lobbyLink}
+                    >
+                      <div className="d-flex align-items-center gap-3 text-start">
+                        <span className="lobby-link-icon">🔗</span>
+                        <div>
+                          <div className="fw-bold">Share Lobby Link</div>
+                          <small className="d-block text-muted">
+                            Copies the lobby URL for students
+                          </small>
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+
+                  <div>
+                    <div className="host-cta-grid">
+                      <Button
+                        className="host-cta start"
+                        variant="success"
+                        disabled={session.state !== "waiting" || session.hasStarted || busy}
+                        onClick={handleStart}
+                      >
+                        <span className="cta-icon">▶</span>
+                        <div>
+                          <div className="cta-title">Start Game</div>
+                          <small>Push question 1 to players</small>
+                        </div>
+                      </Button>
+                      <Button
+                        className="host-cta next"
+                        variant="warning"
+                        disabled={session.state !== "active" || busy}
+                        onClick={handleNext}
+                      >
+                        <span className="cta-icon">⏭</span>
+                        <div>
+                          <div className="cta-title">Next Question</div>
+                          <small>Advance to the next slide</small>
+                        </div>
+                      </Button>
+                      <Button
+                        className="host-cta end"
+                        variant="danger"
+                        disabled={session.state === "ended" || busy}
+                        onClick={handleEnd}
+                      >
+                        <span className="cta-icon">■</span>
+                        <div>
+                          <div className="cta-title">End Game</div>
+                          <small>Publish final leaderboard</small>
+                        </div>
+                      </Button>
+                    </div>
+                    {session.hasStarted && session.state === "ended" && (
+                      <p className="text-warning small mt-2 mb-0">
+                        This live session has finished. Create a new session from the quiz builder to run it again.
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="mb-3 d-flex align-items-center gap-2 flex-wrap">
-                  <strong className="mb-0">PIN:</strong>
-                  <span className="fs-5">{session.pin}</span>
-                  <Button
-                    size="sm"
-                    variant="outline-light"
-                    onClick={() => copyValue(session.pin, "PIN")}
-                  >
-                    Copy
-                  </Button>
+              </div>
+              <div className="host-live-right">
+                <div className="status-panel">
+                  <div className="status-panel-header">
+                    <div>
+                      <p className="status-title text-uppercase mb-1">Connected Students</p>
+                      <small className="status-subtitle">Live lobby presence</small>
+                    </div>
+                    <span className={`status-chip ${session.state}`}>
+                      {session.state}
+                    </span>
+                  </div>
+                  <div className="status-panel-body">
+                    <span className="status-count">{connectedCount}</span>
+                    <div className="status-details">
+                      {/* <span className="status-details-label">students online</span> */}
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex gap-2 flex-wrap">
-                  <Button
-                    variant="success"
-                    disabled={session.state !== "waiting" || session.hasStarted || busy}
-                    onClick={handleStart}
-                  >
-                    Start Game
-                  </Button>
-                  <Button variant="warning" disabled={session.state !== "active" || busy} onClick={handleNext}>
-                    Next Question
-                  </Button>
-                  <Button variant="danger" disabled={session.state === "ended" || busy} onClick={handleEnd}>
-                    End Game
-                  </Button>
-                </div>
-                {session.hasStarted && session.state === "ended" && (
-                  <p className="text-warning small mt-2 mb-0">
-                    This live session has finished. Create a new session from the quiz builder to run it again.
-                  </p>
-                )}
-              </Col>
-              <Col md={6} className="text-md-end mt-3 mt-md-0">
-                <div>
-                  <p className="fs-5">Connected Students</p>
-                  <h2>
-                    {connectedCount}
-                    <Badge bg="secondary" className="ms-2">{session.state}</Badge>
-                  </h2>
-                </div>
-              </Col>
-            </Row>
+              </div>
+            </div>
           </Card.Body>
         </Card>
 

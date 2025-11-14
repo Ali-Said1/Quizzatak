@@ -1,25 +1,29 @@
 import React from 'react';
 import { useNavigate , Link } from 'react-router-dom';
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import Header from "../../components/Header/Header";
 import Swal from 'sweetalert2';
 import quizService from '../../services/quizService';
+import { useAuth } from "../../contexts/AuthContext";
 function JoinGame() {
   const { theme } = useContext(ThemeContext);
-  // eslint-disable-next-line no-unused-vars
-  const [displayName, setDisplayName] = useState('');
     const [gamePin, setGamePin] = useState('');
   const [gameCode, setGameCode] = useState('');
+  const { user } = useAuth();
+  const participantName = useMemo(
+    () => user?.username || localStorage.getItem("displayName") || "Participant",
+    [user]
+  );
     const navigate = useNavigate();
     const handleJoin = async (e) => {
     e.preventDefault();
-    if (!displayName.trim() || !gamePin.trim() || !gameCode.trim()) {
+    if (!gamePin.trim() || !gameCode.trim()) {
       Swal.fire({
         icon: "warning",
         title: "Missing info",
-        text: "Please enter the game code, PIN, and your display name.",
+        text: "Please enter the game code and PIN.",
       });
       return;
     }
@@ -39,8 +43,8 @@ function JoinGame() {
         return;
       }
 
-      // Save display name locally so we can show it in the lobby
-      localStorage.setItem("displayName", displayName);
+      // Save resolved participant name locally so lobby can display it when unauthenticated
+      localStorage.setItem("displayName", participantName);
 
       // Navigate to lobby
       navigate(`/lobby/${session.id}`);
@@ -62,7 +66,6 @@ function JoinGame() {
             <h3 className="text-center fw-bold mb-4">Join Game</h3>
             
             <Form>
-
               <Form.Group className="mb-3">
                 <Form.Label>Game Code</Form.Label>
                 <Form.Control 

@@ -15,7 +15,6 @@ export const getClassroom = asyncHandler(async (req, res) => {
 });
 
 export const createClassroom = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const classroom = await classroomService.createClassroom(
     req.user,
     req.body.name
