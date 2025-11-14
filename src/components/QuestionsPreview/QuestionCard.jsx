@@ -11,8 +11,8 @@ function QuestionCard({ question }) {
         <Card.Title className="h5 mb-3">{question.text}</Card.Title>
 
        <ListGroup variant="flush">
-        {question.options.map((option, index) => {
-            const isCorrect = index + 1 === question.correct;
+    {question.options.map((option, index) => {
+      const isCorrect = index === Number(question.correct ?? 0);
             return (
             <ListGroup.Item
                 key={index}

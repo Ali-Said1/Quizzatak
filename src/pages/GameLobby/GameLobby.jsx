@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import quizService from "../../services/quizService";
 import classroomService from "../../services/classroomService";
 import Header from "../../components/Header/Header";
@@ -8,37 +8,106 @@ import Swal from "sweetalert2";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import "./GameLobby.css";
+import { useAuth } from "../../contexts/AuthContext";
+import { connectSocket, disconnectSocket } from "../../services/socketClient";
 
 const GameLobby = () => {
   const { theme } = useContext(ThemeContext);
   const { gameSessionId } = useParams();
+  const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [classroom, setClassroom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [connectedCount, setConnectedCount] = useState(0);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchGameDetails = async () => {
       try {
         const sessionData = await quizService.getGameSessionById(gameSessionId);
         if (!sessionData) throw new Error("Game session not found.");
-        setSession(sessionData);
+  setSession(sessionData);
+  setConnectedCount(sessionData.connectedStudents?.length ?? 0);
 
         const classroomData = await classroomService.getClassroomById(sessionData.classroomId);
         setClassroom(classroomData);
       } catch (error) {
+        const errorMessage = error?.message || "Unable to load lobby.";
+        const shouldRedirectToJoin = /classroom|not found|not enrolled/i.test(errorMessage);
+
         Swal.fire({
           icon: "error",
           title: "Failed to load lobby",
-          text: error.message,
+          text: errorMessage,
+        }).then(() => {
+          if (shouldRedirectToJoin) {
+            navigate("/join");
+          }
         });
       } finally {
         setLoading(false);
       }
     };
     fetchGameDetails();
-  }, [gameSessionId]);
+  }, [gameSessionId, navigate]);
 
-  if (loading) return <div className={`vh-100 w-100 main-wrapper ${theme}`}> <Spinner text="Loading game lobby..." /> </div>;
+  const sessionId = session?.id;
+  const userId = user?.id;
+  const participantName =
+    user?.username || localStorage.getItem("displayName") || "Participant";
+
+  useEffect(() => {
+    if (!sessionId || !userId) return undefined;
+    const socket = connectSocket();
+    socket.emit("joinGame", {
+      gameSessionId: sessionId,
+      studentId: userId,
+      studentName: participantName,
+    });
+
+    const handleGameStateUpdated = (payload) => {
+      setSession((prev) => ({ ...prev, ...payload }));
+      if (payload.state === "active") {
+        navigate(`/quiz/${payload.id || sessionId}`);
+      }
+      if (payload.state === "ended") {
+        Swal.fire({
+          icon: "info",
+          title: "Game ended",
+          text: "This session has finished.",
+        }).then(() => navigate("/dashboard"));
+      }
+    };
+
+    const handleStudentJoined = ({ totalStudents }) => {
+      if (typeof totalStudents === "number") {
+        setConnectedCount(totalStudents);
+      }
+    };
+
+    socket.on("gameStateUpdated", handleGameStateUpdated);
+    socket.on("studentJoined", handleStudentJoined);
+
+    return () => {
+      socket.off("gameStateUpdated", handleGameStateUpdated);
+      socket.off("studentJoined", handleStudentJoined);
+      disconnectSocket();
+    };
+  }, [sessionId, userId, participantName, navigate]);
+
+  if (loading)
+    return (
+      <div className={`vh-100 w-100 main-wrapper ${theme}`}>
+        <Spinner text="Loading game lobby..." />
+      </div>
+    );
+
+  if (!session || !classroom)
+    return (
+      <div className={`vh-100 w-100 main-wrapper ${theme}`}>
+        <Spinner text="Redirecting..." />
+      </div>
+    );
 
 
   return (
@@ -50,14 +119,14 @@ const GameLobby = () => {
             <h2 className="mb-4">Game Lobby</h2>
 
             <Row className="mb-3">
-              <Col><strong>Game ID:</strong> {session.id}</Col>
+              <Col><strong>Game Code:</strong> {session.shareCode}</Col>
               <Col><strong>PIN:</strong> {session.pin}</Col>
             </Row>
             <Row className="mb-3">
               <Col><strong>State:</strong> {session.state}</Col>
               <Col>
                 <strong>Connected Students:</strong>{" "}
-                {session.connectedStudents?.length ?? 0}
+                {connectedCount}
               </Col>
             </Row>
             {classroom && (

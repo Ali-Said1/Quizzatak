@@ -37,6 +37,7 @@
   margin: 0;
 }
 
+
 .option-item {
   padding: 0.75rem 1rem;
   margin-bottom: 0.75rem;
@@ -79,25 +80,3 @@
 }
 
 
-/* Results Styling */
-.results-card .result-question {
-  margin-bottom: 1.5rem;
-}
-
-.results-card .option-item {
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-/* Correct & Wrong Colors */
-.results-card .option-item.correct {
-  background-color: #10b981;
-  color: white;
-}
-
-.results-card .option-item.wrong {
-  background-color: #ef4444;
-  color: white;
-}

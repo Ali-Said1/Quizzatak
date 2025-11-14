@@ -8,38 +8,33 @@ import Swal from 'sweetalert2';
 import quizService from '../../services/quizService';
 function JoinGame() {
   const { theme } = useContext(ThemeContext);
-    const [displayName, setDisplayName] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [displayName, setDisplayName] = useState('');
     const [gamePin, setGamePin] = useState('');
-    const [gameId, setGameId] = useState('');
+  const [gameCode, setGameCode] = useState('');
     const navigate = useNavigate();
     const handleJoin = async (e) => {
     e.preventDefault();
-    if (!gameId.trim() || !displayName.trim()) {
+    if (!displayName.trim() || !gamePin.trim() || !gameCode.trim()) {
       Swal.fire({
         icon: "warning",
         title: "Missing info",
-        text: "Please enter both Game ID and Display Name",
+        text: "Please enter the game code, PIN, and your display name.",
       });
       return;
     }
 
     try {
-      const session = await quizService.getGameSessionById(gameId);
+      const lookupPayload = {
+        shareCode: gameCode.trim().toUpperCase(),
+        pin: gamePin.trim(),
+      };
+      const session = await quizService.lookupGameSession(lookupPayload);
       if (!session) {
         Swal.fire({
           icon: "error",
           title: "Game not found",
-          text: `No active game found with ID ${gameId}`,
-        });
-        return;
-      }
-
-      // Optional PIN check
-      if (gamePin && session.pin !== gamePin) {
-        Swal.fire({
-          icon: "error",
-          title: "Invalid PIN",
-          text: "The game PIN you entered is incorrect.",
+          text: `No active game found for code ${gameCode}`,
         });
         return;
       }
@@ -69,41 +64,30 @@ function JoinGame() {
             <Form>
 
               <Form.Group className="mb-3">
-                <Form.Label>Game ID</Form.Label>
+                <Form.Label>Game Code</Form.Label>
                 <Form.Control 
                   type="text" 
-                  placeholder="Game ID"
-                  value={gameId}
-                  onChange={(e) => setGameId(e.target.value)}
+                  placeholder="e.g. ABC123"
+                  value={gameCode}
+                  onChange={(e) => setGameCode(e.target.value.toUpperCase())}
                 />
               </Form.Group>
 
-              <Form.Group className="mb-3">
-                <Form.Label>Game PIN</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="6-digit PIN"
-                  value={gamePin}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    // Only allow digits, and max length 6
-                    if (/^\d*$/.test(val) && val.length <= 6) {
-                      setGamePin(val);
-                    }
-                  }}
-                />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Game PIN</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    placeholder="6-digit PIN"
+                    value={gamePin}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (/^\d*$/.test(val) && val.length <= 6) {
+                        setGamePin(val);
+                      }
+                    }}
+                  />
+                </Form.Group>
 
-
-              <Form.Group className="mb-3">
-                <Form.Label>Display Name</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="Your display name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                />
-              </Form.Group>
 
             <Button 
             variant="secondary" 

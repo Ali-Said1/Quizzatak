@@ -14,6 +14,7 @@ import Spinner from './components/Spinner.jsx';
 import NotFound from "./pages/NotFound/NotFound.jsx"
 import { ThemeProvider } from './contexts/ThemeContext.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
+import HostLive from "./pages/HostLive/HostLive.jsx";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -35,6 +36,7 @@ export default function App() {
             path="/host" 
             element={<HostQuiz/>} 
           />
+          <Route path="/host/live/:gameSessionId" element={<HostLive />} />
           <Route 
             path="/login" 
             element={<Login/>} 

@@ -4,10 +4,13 @@ import {
   listSessions,
   getSession,
   updateSession,
+  publicLookupSession,
 } from "../controllers/gameSessionController.js";
 import { authenticate, requireTeacher } from "../middleware/authMiddleware.js";
 
 const router = Router();
+
+router.get("/lookup", publicLookupSession);
 
 router.use(authenticate);
 

@@ -31,6 +31,21 @@ const quizSchema = new Schema(
     teacherId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     quizSubmissions: [{ type: Schema.Types.ObjectId, ref: "Submission" }],
     questions: [questionSchema],
+    pendingSessionId: {
+      type: Schema.Types.ObjectId,
+      ref: "GameSession",
+      default: null,
+    },
+    activeSessionId: {
+      type: Schema.Types.ObjectId,
+      ref: "GameSession",
+      default: null,
+    },
+    status: {
+      type: String,
+      enum: ["draft", "live", "completed"],
+      default: "draft",
+    },
   },
   { timestamps: true }
 );

@@ -64,6 +64,8 @@ export const generateJoinCode = () => {
 export const generateGamePin = () =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
+export const generateShareCode = () => generateJoinCode();
+
 export const ensureUnique = (generator, predicate) => {
   let value;
   do {

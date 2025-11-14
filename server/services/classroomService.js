@@ -13,7 +13,7 @@ const withQuizzes = async (classroomDoc) => {
   if (!classroomDoc) return null;
   const classroom = classroomDoc.toJSON();
   const quizzes = await Quiz.find({ _id: { $in: classroom.quizIds } })
-    .select(["title", "questions"])
+    .select(["title", "questions", "status"])
     .lean();
   return {
     ...classroom,
@@ -21,6 +21,7 @@ const withQuizzes = async (classroomDoc) => {
       id: quiz._id.toString(),
       title: quiz.title,
       questionCount: quiz.questions.length,
+      status: quiz.status || "draft",
     })),
   };
 };

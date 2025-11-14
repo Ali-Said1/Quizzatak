@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import * as gameSessionService from "../services/gameSessionService.js";
+import { createHttpError } from "../utils/error.js";
 
 export const createSession = asyncHandler(async (req, res) => {
   const gameSession = await gameSessionService.createGameSession(
@@ -32,4 +33,29 @@ export const updateSession = asyncHandler(async (req, res) => {
     req.body
   );
   res.json({ gameSession });
+});
+
+export const publicLookupSession = asyncHandler(async (req, res) => {
+  const { gameSessionId, pin, shareCode } = req.query;
+  if (!gameSessionId && !pin && !shareCode) {
+    throw createHttpError(400, "Provide gameSessionId, pin, or shareCode");
+  }
+  const session = await gameSessionService.publicLookupSession({
+    gameSessionId,
+    pin,
+    shareCode,
+  });
+  if (!session) {
+    throw createHttpError(404, "Game session not found");
+  }
+  res.json({
+    gameSession: {
+      id: session.id,
+      pin: session.pin,
+      state: session.state,
+      quizId: session.quizId,
+      classroomId: session.classroomId,
+      shareCode: session.shareCode,
+    },
+  });
 });
