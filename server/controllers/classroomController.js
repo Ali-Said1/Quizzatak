@@ -62,3 +62,11 @@ export const leaveClassroom = asyncHandler(async (req, res) => {
   await classroomService.leaveClassroom(req.user, req.params.id);
   res.json({ message: "Left classroom" });
 });
+
+export const getStudentProgress = asyncHandler(async (req, res) => {
+  const progress = await classroomService.getStudentProgress(
+    req.user,
+    req.params.id
+  );
+  res.json({ history: progress });
+});

@@ -115,7 +115,7 @@ const TeacherDashboard = () => {
     }
   };
 
-  const navigateToGradebook = (classroomId) => {
+  const navigateToClassroom = (classroomId) => {
     navigate(`/classroom/${classroomId}`);
   };
 
@@ -309,7 +309,13 @@ const TeacherDashboard = () => {
                             </Button>
                           </>
                         ) : (
-                          <Button variant="outline-light" size="sm">Open</Button>
+                          <Button
+                            variant="outline-light"
+                            size="sm"
+                            onClick={() => navigateToClassroom(c.id)}
+                          >
+                            Open
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -332,7 +338,7 @@ const TeacherDashboard = () => {
                                 <Button
                                   variant="outline-light"
                                   size="sm"
-                                  onClick={() => navigateToGradebook(c.id)}
+                                  onClick={() => navigateToClassroom(c.id)}
                                 >
                                   View gradebook
                                 </Button>

@@ -27,18 +27,27 @@ const Classroom = () => {
   const [gradebookLoading, setGradebookLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gradebookError, setGradebookError] = useState(null);
+  const [studentHistory, setStudentHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyError, setHistoryError] = useState(null);
+  const isTeacher = user?.role === "teacher";
 
   useEffect(() => {
+    if (!classroomId) return;
     const fetchClassroom = async () => {
       setLoading(true);
       setError(null);
       try {
-        const [classData, classStudents] = await Promise.all([
-          classroomService.getClassroomById(classroomId),
-          classroomService.getStudentsFromClassroom(classroomId),
-        ]);
+        const classData = await classroomService.getClassroomById(classroomId);
         setClassroom(classData);
-        setStudents(classStudents);
+        if (isTeacher) {
+          const classStudents = await classroomService.getStudentsFromClassroom(
+            classroomId
+          );
+          setStudents(classStudents);
+        } else {
+          setStudents([]);
+        }
       } catch (err) {
         setError(err.message || "Unable to load classroom");
       } finally {
@@ -46,9 +55,15 @@ const Classroom = () => {
       }
     };
     fetchClassroom();
-  }, [classroomId]);
+  }, [classroomId, isTeacher]);
 
   useEffect(() => {
+    if (!classroom || !isTeacher) {
+      setGradebook({});
+      setGradebookError(null);
+      setGradebookLoading(false);
+      return;
+    }
     const fetchGradebook = async () => {
       if (!classroom?.quizzes?.length) {
         setGradebook({});
@@ -61,18 +76,24 @@ const Classroom = () => {
         const entries = await Promise.all(
           classroom.quizzes.map(async (quiz) => {
             try {
-              const sessionResponse = await quizService.getGameSessionsForQuiz(quiz.id);
+              const sessionResponse = await quizService.getGameSessionsForQuiz(
+                quiz.id
+              );
               const sessionListRaw = Array.isArray(sessionResponse)
                 ? sessionResponse
                 : sessionResponse?.gameSessions ?? [];
               const sessionList = sessionListRaw.filter(
-                (session) => session.classroomId === classroom.id || session.classroomId === classroomId
+                (session) =>
+                  session.classroomId === classroom.id ||
+                  session.classroomId === classroomId
               );
               if (!sessionList.length) {
                 return [quiz.id, {}];
               }
               const latestSession = sessionList[0];
-              const submissionsResponse = await quizService.getSubmissionsForGame(latestSession.id);
+              const submissionsResponse = await quizService.getSubmissionsForGame(
+                latestSession.id
+              );
               const submissionList = Array.isArray(submissionsResponse)
                 ? submissionsResponse
                 : submissionsResponse?.submissions ?? [];
@@ -94,14 +115,49 @@ const Classroom = () => {
         setGradebookLoading(false);
       }
     };
-    if (classroom) {
-      fetchGradebook();
-    }
-  }, [classroom, classroomId]);
+    fetchGradebook();
+  }, [classroom, classroomId, isTeacher]);
 
-  const isTeacher = user?.role === "teacher";
+  useEffect(() => {
+    if (isTeacher || !classroomId) {
+      setStudentHistory([]);
+      setHistoryError(null);
+      setHistoryLoading(false);
+      return;
+    }
+    const fetchHistory = async () => {
+      setHistoryLoading(true);
+      setHistoryError(null);
+      try {
+        const history = await classroomService.getStudentProgress(classroomId);
+        setStudentHistory(history);
+      } catch (err) {
+        setHistoryError(err.message || "Unable to load progress");
+      } finally {
+        setHistoryLoading(false);
+      }
+    };
+    fetchHistory();
+  }, [classroomId, isTeacher]);
 
   const quizColumns = useMemo(() => classroom?.quizzes ?? [], [classroom]);
+  const totalStudentPoints = useMemo(
+    () =>
+      studentHistory.reduce(
+        (sum, entry) => sum + (entry?.totalScore ?? 0),
+        0
+      ),
+    [studentHistory]
+  );
+
+  const formatSubmissionDate = (value) => {
+    if (!value) return "Not submitted yet";
+    try {
+      return new Date(value).toLocaleString();
+    } catch (err) {
+      return "Not submitted yet";
+    }
+  };
 
   const renderCell = (quizId, studentId) => {
     const quizEntry = gradebook[quizId];
@@ -119,13 +175,90 @@ const Classroom = () => {
     return (
       <div className={`main-wrapper ${theme}`}>
         <Header />
-        <Container className="py-5 text-center">
-          <Card className={`classroom-card ${theme}`}>
-            <Card.Body>
-              <h4>Teacher access required</h4>
-              <p className="mb-0">Only teachers can view classroom gradebooks.</p>
-            </Card.Body>
-          </Card>
+        <Container className="py-4">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+              <h2 className="fw-bold text-light mb-0">
+                {classroom?.name || "Classroom"}
+              </h2>
+              <small className="text-muted-custom">
+                Join code: {classroom?.joinCode || "—"}
+              </small>
+            </div>
+            <Button variant="outline-light" onClick={() => navigate(-1)}>
+              Back
+            </Button>
+          </div>
+
+          {loading ? (
+            <div className="d-flex justify-content-center py-5">
+              <Spinner />
+            </div>
+          ) : error ? (
+            <Card className={`classroom-card ${theme}`}>
+              <Card.Body>
+                <p className="mb-0 text-danger">{error}</p>
+              </Card.Body>
+            </Card>
+          ) : (
+            <Card className={`classroom-card ${theme}`}>
+              <Card.Body>
+                <div className="d-flex flex-wrap gap-3 mb-4">
+                  <Badge bg="secondary">
+                    {studentHistory.length} quizzes taken
+                  </Badge>
+                  <Badge bg="info">
+                    {totalStudentPoints} pts earned
+                  </Badge>
+                  <Badge bg="dark" className="text-light">
+                    {classroom?.quizzes?.length ?? 0} quizzes available
+                  </Badge>
+                </div>
+
+                {historyError && (
+                  <div className="alert alert-warning" role="alert">
+                    {historyError}
+                  </div>
+                )}
+
+                {historyLoading ? (
+                  <div className="d-flex justify-content-center py-4">
+                    <Spinner />
+                  </div>
+                ) : studentHistory.length ? (
+                  <div className="d-flex flex-column gap-3">
+                    {studentHistory.map((entry) => (
+                      <div
+                        key={entry.submissionId}
+                        className="d-flex justify-content-between align-items-start flex-wrap gap-3 p-3 rounded border border-secondary"
+                      >
+                        <div>
+                          <div className="fw-semibold text-light">
+                            {entry.quizTitle}
+                          </div>
+                          <small className="text-muted-custom d-block">
+                            {entry.questionCount} questions • {formatSubmissionDate(entry.submittedAt)}
+                          </small>
+                        </div>
+                        <div className="text-end">
+                          <span className="badge bg-success fs-6">
+                            {entry.totalScore} pts
+                          </span>
+                          <small className="d-block text-muted-custom">
+                            Session ID: {entry.gameSessionId}
+                          </small>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mb-0 text-muted">
+                    No quiz attempts yet. Join a live session to start earning points.
+                  </p>
+                )}
+              </Card.Body>
+            </Card>
+          )}
         </Container>
       </div>
     );

@@ -9,6 +9,7 @@ import {
   listStudents,
   removeStudent,
   leaveClassroom,
+  getStudentProgress,
 } from "../controllers/classroomController.js";
 import {
   authenticate,
@@ -21,9 +22,10 @@ const router = Router();
 router.use(authenticate);
 
 router.get("/", listClassrooms);
-router.get("/:id", getClassroom);
 router.post("/", requireTeacher, createClassroom);
 router.post("/join", requireStudent, joinClassroom);
+router.get("/:id/student-progress", requireStudent, getStudentProgress);
+router.get("/:id", getClassroom);
 router.patch("/:id", requireTeacher, updateClassroom);
 router.delete("/:id", requireTeacher, deleteClassroom);
 router.get("/:id/students", requireTeacher, listStudents);

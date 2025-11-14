@@ -60,6 +60,9 @@ const authService = {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
       }
+      if (typeof window !== "undefined") {
+        window.location.replace("/");
+      }
       throw new Error(error.message || "Failed to get user");
     }
   },

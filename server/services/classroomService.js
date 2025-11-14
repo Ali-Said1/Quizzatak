@@ -207,3 +207,53 @@ export const isTeacherOfClassroom = async (teacherId, classroomId) => {
   });
   return Boolean(classroom);
 };
+
+export const getStudentProgress = async (user, classroomId) => {
+  if (user.role !== "student") {
+    throw createHttpError(403, "Students only");
+  }
+  const classroom = await verifyClassroomAccess(user, classroomId);
+  const sessions = await GameSession.find({ classroomId: classroom._id })
+    .select(["_id", "quizId", "state", "endedAt"])
+    .lean();
+  if (!sessions.length) {
+    return [];
+  }
+  const sessionMap = new Map(
+    sessions.map((session) => [session._id.toString(), session])
+  );
+  const sessionIds = sessions.map((session) => session._id);
+  const submissions = await Submission.find({
+    studentId: toObjectId(user.id),
+    gameSessionId: { $in: sessionIds },
+  })
+    .sort({ submittedAt: -1, createdAt: -1 })
+    .lean();
+  if (!submissions.length) {
+    return [];
+  }
+  const quizIds = Array.from(
+    new Set(
+      sessions.map((session) => session.quizId?.toString()).filter(Boolean)
+    )
+  );
+  const quizzes = await Quiz.find({ _id: { $in: quizIds } })
+    .select(["title", "questions"])
+    .lean();
+  const quizMap = new Map(quizzes.map((quiz) => [quiz._id.toString(), quiz]));
+  return submissions.map((submission) => {
+    const session = sessionMap.get(submission.gameSessionId.toString());
+    const quiz = session ? quizMap.get(session.quizId?.toString()) : null;
+    return {
+      submissionId: submission._id.toString(),
+      gameSessionId: submission.gameSessionId.toString(),
+      quizId: session?.quizId?.toString() || null,
+      quizTitle: quiz?.title || "Untitled quiz",
+      questionCount: quiz?.questions?.length || 0,
+      totalScore: submission.totalScore,
+      submittedAt: submission.submittedAt,
+      sessionState: session?.state || "waiting",
+      sessionEndedAt: session?.endedAt || null,
+    };
+  });
+};

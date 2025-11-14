@@ -1,13 +1,13 @@
-import api from './api.js';
+import api from "./api.js";
 
 const classroomService = {
   // Get all classrooms for current user
   async getAllClassrooms() {
     try {
-      const { data } = await api.get('/classrooms');
+      const { data } = await api.get("/classrooms");
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to fetch classrooms');
+      throw new Error(error.message || "Failed to fetch classrooms");
     }
   },
 
@@ -17,27 +17,27 @@ const classroomService = {
       const { data } = await api.get(`/classrooms/${classroomId}`);
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to fetch classroom');
+      throw new Error(error.message || "Failed to fetch classroom");
     }
   },
 
   // Create a new classroom (teacher only)
   async createClassroom(name) {
     try {
-      const { data } = await api.post('/classrooms', { name });
+      const { data } = await api.post("/classrooms", { name });
       return data; // includes generated joinCode
     } catch (error) {
-      throw new Error(error.message || 'Failed to create classroom');
+      throw new Error(error.message || "Failed to create classroom");
     }
   },
 
   // Join classroom with code (student only)
   async joinClassroom(joinCode) {
     try {
-      const { data } = await api.post('/classrooms/join', { joinCode });
+      const { data } = await api.post("/classrooms/join", { joinCode });
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to join classroom');
+      throw new Error(error.message || "Failed to join classroom");
     }
   },
 
@@ -47,7 +47,7 @@ const classroomService = {
       const { data } = await api.patch(`/classrooms/${classroomId}`, { name });
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to update classroom');
+      throw new Error(error.message || "Failed to update classroom");
     }
   },
 
@@ -57,7 +57,7 @@ const classroomService = {
       const { data } = await api.delete(`/classrooms/${classroomId}`);
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to delete classroom');
+      throw new Error(error.message || "Failed to delete classroom");
     }
   },
 
@@ -67,17 +67,19 @@ const classroomService = {
       const { data } = await api.get(`/classrooms/${classroomId}/students`);
       return data.students;
     } catch (error) {
-      throw new Error(error.message || 'Failed to fetch students');
+      throw new Error(error.message || "Failed to fetch students");
     }
   },
 
   // Remove student from classroom (teacher only)
   async removeStudent(classroomId, studentId) {
     try {
-      const { data } = await api.delete(`/classrooms/${classroomId}/students/${studentId}`);
+      const { data } = await api.delete(
+        `/classrooms/${classroomId}/students/${studentId}`
+      );
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to remove student');
+      throw new Error(error.message || "Failed to remove student");
     }
   },
 
@@ -87,10 +89,21 @@ const classroomService = {
       const { data } = await api.post(`/classrooms/${classroomId}/leave`);
       return data;
     } catch (error) {
-      throw new Error(error.message || 'Failed to leave classroom');
+      throw new Error(error.message || "Failed to leave classroom");
     }
   },
 
+  // Get student progress for classroom (student only)
+  async getStudentProgress(classroomId) {
+    try {
+      const { data } = await api.get(
+        `/classrooms/${classroomId}/student-progress`
+      );
+      return Array.isArray(data) ? data : data?.history ?? [];
+    } catch (error) {
+      throw new Error(error.message || "Failed to load classroom progress");
+    }
+  },
 };
 
 export default classroomService;
