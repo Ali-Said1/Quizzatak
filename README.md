@@ -112,28 +112,28 @@ Whether used for **learning, competition, or entertainment**, Quizzatak adapts t
 
 ✅ [Figma Design](https://www.figma.com/design/5hQglns2vgszbaDVSPPXDe/Quizzatak?node-id=4-2&t=WjYQV1LD4OxUXbKQ-1)
 
-- [ ] Phase 1 - UI & Gameplay Flow (Weeks 2–3)
+- [x] Phase 1 - UI & Gameplay Flow (Weeks 2–3)
 
 * Build quiz creation form (frontend only)
 * Design host dashboard and player join screen
 * Build quiz question/answer screens
 * Add timer countdown and basic scoring logic (frontend simulation)
 
-- [ ] Phase 2 - Real-Time Simulation (Weeks 4–5)
+- [x] Phase 2 - Real-Time Simulation (Weeks 4–5)
 
 * Mock real-time updates with local state
 * Build leaderboard component (frontend-only demo)
 * Add animations and accessibility improvements
 * Prepare for integration with backend
 
-- [ ] Phase 3 - Backend & Database (Weeks 6–7)
+- [x] Phase 3 - Backend & Database (Weeks 6–7)
 
 * Set up Express.js server
 * Implement MongoDB models for quizzes, users, scores
 * Add JWT authentication and role-based access
 * Integrate with frontend UI
 
-- [ ] Phase 4 - Final Polish & Deployment (Week 8)
+- [x] Phase 4 - Final Polish & Deployment (Week 8)
 
 * Implement real-time play with Socket.IO
 * Optimize UI for mobile and Arabic (RTL support)
