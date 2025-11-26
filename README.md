@@ -203,7 +203,7 @@ A live demo will be available soon. Stay tuned! 🚀
 Clone the repository and enter the project directory:
 
 ```bash
-git clone [https://github.com/Ali-Said1/Quizzatak](https://github.com/Ali-Said1/Quizzatak)
+git clone https://github.com/Ali-Said1/Quizzatak
 cd Quizzatak
 npm install
 ```
