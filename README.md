@@ -198,6 +198,22 @@ Whether used for **learning, competition, or entertainment**, Quizzatak adapts t
 
 A live demo will be available soon. Stay tuned! 🚀
 
+## To run locally:
+### 1. Installation
+Clone the repository and enter the project directory:
+
+```bash
+git clone [https://github.com/Ali-Said1/Quizzatak](https://github.com/Ali-Said1/Quizzatak)
+cd Quizzatak
+npm install
+```
+### 2. Open 3 terminals:
+- Terminal 1:
+  `npm run dev`
+- Terminal 2:
+  `mongod --dbpath server/data`
+- Terminal 3:
+  `node server/index.js`
 ---
 
 <a id="license"></a>
